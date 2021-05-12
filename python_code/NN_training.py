@@ -13,6 +13,7 @@ import numpy as np
 import pandas_datareader as pdr
 import timeit
 
+# hoi bla bla
 
 
 # for i in dataset:
