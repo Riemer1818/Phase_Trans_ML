@@ -20,7 +20,7 @@ class StatPhys:
     
     def __init__(self,begin_state,KbT):
         self.M    = begin_state #M is de matrix waarin de spin wordt bijgehouden duur +1 of -1
-        self.KbT  = KbT
+        self.KbT  = KbT 
         self.xlen = np.shape(self.M)[0] 
         self.ylen = np.shape(self.M)[1]
         self.GemiddeldeEnergieBerekenen()
@@ -90,19 +90,7 @@ class StatPhys:
             self.lijst_energie[n+1] = self.lijst_energie[n]
             self.lijst_magnetization[n+1] = self.lijst_magnetization[n]
         
-
-
-    def Laatste_waarde(self, hoeveelheid = 50, speed = 0.3):
-        """Een functie om afhankelijk van de inputs, een lopend plot te maken voor een bepaalde regel."""
-        
-        lijst = self.Lijst_maken(hoeveelheid)
-      
-        return self.lijst_magnetization[-1]
-    
-    def data_werving(self,hoeveelheid):
-        lijst = self.Lijst_maken(hoeveelheid)
-        return lijst
-    
+   
     def laatste_100waardes(self, hoeveelheid = 10**4):
         lijst = self.Lijst_maken(hoeveelheid)
         "nu willen we de laatste en de 100 daarvoor met spacing 100."
@@ -110,39 +98,9 @@ class StatPhys:
         for i in range(1,10):
             final_lijst.append([self.KbT,lijst[-100*i]])
         return final_lijst
-            
-        
-        
-            
-        
-
-# t= 0
-# aantal_sim = 50
-# temp = 0
-# final_list = [[0,0] for i in range(aantal_sim)]
-
-# hoeveeliteratie = 10 **5
-# while t<aantal_sim:
-#     temp += 3/aantal_sim
-#     State = np.random.choice([-1,1],  size = [20,20])
-#     sim = StatPhys(State,KbT=temp)
-#     final_list[t] = [temp,sim.Laatste_waarde(speed = 0, hoeveelheid = 100000)]
-#     t += 1
-
-# # print(final_list)
-
-# plt.figure()
-# x = [i[0] for i in final_list]
-# y = [i[1] for i in final_list]
-
-# plt.scatter(x,y)
-
-# np.save('data', final_list)
-
-# eind = time.time()
-# print(eind-begin)
-
-Tk = 2.4
+         
+      
+Tk = 2.7
 n = 100 #hoeveel verschillende temp
 m = 5   #hoeveel random states per temp
 Temperatuur = np.linspace(0.001,2*Tk, n) 
@@ -165,30 +123,6 @@ for temp in enumerate(Temperatuur):
         
 print(Temperatuur)
 
+np.save('test_data_2', final)
+# np.save('train_data', final)
 
-# t= 0
-# aantal_sim = 50
-# temp = 0
-# final_list = [[0,0] for i in range(aantal_sim)]
-
-# hoeveeliteratie = 10 **5
-# while t<aantal_sim:
-#     temp += 3/aantal_sim
-#     State = np.random.choice([-1,1],  size = [20,20])
-#     sim = StatPhys(State,KbT=temp)
-#     print(sim.data_werving(10))
-#     final_list[t] = [temp,sim.Laatste_waarde(speed = 0, hoeveelheid = 100000)]
-#     t += 1
-
-# # print(final_list)
-
-# plt.figure()
-# x = [i[0] for i in final_list]
-# y = [i[1] for i in final_list]
-
-# plt.scatter(x,y)
-
-np.save('train_data', final)
-
-# eind = time.time()
-# print(eind-begin)
