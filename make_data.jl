@@ -1,3 +1,5 @@
+using Plots
+
 function get_average(A::Array)
 	# gets average of a matrix / array
 	E = 0
@@ -41,30 +43,35 @@ function get_neighbor_map(A::Array, D::Int, n::Int)
 
 end
 
-function get_particle_energy(A::Array, M::Array, n::Int, random_locat::Array)
-	
-	# sets energy as current energy
-	part_energy = A[CartesianIndex(Tuple(random_locat))]
 
+function get_particle_energy(A::Array, M::Array, n::Int, random_locat::Array, J::Int)
+	# gets the energy of a specific particle. Looks at all neighbors in M
+
+	# sets energy as current energy
+	part_spin = A[CartesianIndex(Tuple(random_locat))] #(-1 | 1)
+
+	H = 0
 
 	# indices all neighbors
 	for x in eachindex(M)
 
 		# gets neighbors location
-		locat = random_locat + M[x]
+		neighbor = random_locat + M[x]
 
 		# fixes edge cases
-		locat = ((locat.-1) .% n) .+ 1
+		neighbor = ((neighbor.-1) .% n) .+ 1
 
 		# adds energy to part energy
-		part_energy *= -A[CartesianIndex(Tuple(locat))] 
+		H += A[CartesianIndex(Tuple(neighbor))]*part_spin
 
 	end
 
-	# returns the particle energy *-2 (why *-2?)
-	return (part_energy*-2)
+	# returns the particle energy 
+	return J*H*2 
 
 end
+
+# define J
 
 
 function get_random_particle(dims)
@@ -82,50 +89,71 @@ function get_random_particle(dims)
 end
 
 
-function calc_flip(∆E::Int64, KbT::Float64, random_locat::Array)
+function calc_flip(∆H::Int64, KbT::Float64)
+	# returns bool dependent on difference in energy. 
 	particle_energy = 0
 
 	# when energy decreases, the state is switched (flipped), from just looking at neighbors
-	if ∆E <= 0
-		state[CartesianIndex(Tuple(random_locat))] *= -1
-		particle_flip = true
+	if ∆H <= 0
+		return true
+	
 	else
 		# this is unclear in the python file
-		partile_energy = exp(-∆E/KbT)
+		particle_energy = exp(-∆H/KbT)
 
 		# compares to uniform random float 0 - 1, random chance for the particle to flip 
 		if particle_energy >= rand()
-
-			# replaces the particle in the state 
-			state[CartesianIndex(Tuple(random_locat))] *= -1
-
-			particle_flip = true
+			return true
 
 		else 
-			particle_flip = false
-		end
-	end
+			return false
 
-	return particle_flip
+		end
+
+	end
 
 end
 
 
-Tk 		= 2.27	# Critical temperature
+# These you should play with
 step 	= 100 	# number of temperatures
-m 		= 5 	# number of states per temperature
-n 		= 50 	# length of grid 
+m 		= 1		# number of states per temperature
+n 		= 20 	# length of grid 
 
+# Kb 		= 1.380649*10^-23 #Boltzman constant
+Kb 		= 1 # why does this work? 
+J 		= 1 #if J negative: antiferromagnet
+itir 	= 10^4
 
 # gets random state matrix 
-state = rand((-1,1), (n, n, n))
-# state = [1 2 3; 4 5 6; 7 8 9]
+state = rand((-1,1), (n, n)) 
 
 # defines number of dimensions
 dims = ndims(state)
 
+
+if dims == 2
+	Tk = 2.27	# Critical temperature for 2D
+elseif dims == 3
+	Tk = 4.5	# Critical temperatrue for 3D
+elseif dims == 4
+	Tk 	= 6.86 	# Critical temperature for 4D
+end
+
+
+# check ferromagnaticy and add to filename
+if J < 1
+	format = "anti"
+else 
+	format = "normal"
+end
+
+# final filename
+plotname = format * "_" * string(dims) * "D_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step.png"
+println(plotname)
+
 # makes linspace of temperature
-temperature = LinRange(0.001, Tk*2, step)  |> collect
+temperature = LinRange(0, Tk*2, step)  |> collect
 # println(temperature)
 
 # makes a map of all possible neighbors (vectors)
@@ -134,27 +162,52 @@ neighbor_map = get_neighbor_map(state, dims, n)
 final = []
 
 # iterates the temperatue
-for KbT in temperature
-	println(KbT)
+for T in temperature
+	
+	println(T)
+	KbT = Kb*T
+	sub_list = [] 
 
 	# number of states per temperature
 	for z in 1:m
-		# gets a random particle cartesian index 
-		random_locat = get_random_particle(dims)
 
-		# gets energy of this random particle 
-		∆E = get_particle_energy(state, neighbor_map, n, random_locat)
-		# println(∆E)
+		state = rand((-1,1), (n, n))
 
-		# calculates if (random) particle flips 
-		if calc_flip(∆E, KbT, random_locat)
-			state[random_locat] *= -1
-			println("something flipped")
+		push!(sub_list, state)
+
+		for i in 1:itir
+			# gets a random particle cartesian index 
+			random_locat = get_random_particle(dims)
+			# println(random_locat)
+
+			# gets energy of this random particle 
+			∆E = get_particle_energy(state, neighbor_map, n, random_locat, J)
+			# println(∆E) 
+
+			# calculates if (random) particle flips 
+			if calc_flip(∆E, KbT)
+				state[CartesianIndex(Tuple(random_locat))] *= -1
+				# println(CartesianIndex(Tuple(random_locat)))
+			end
+
+			# every 100 states a state is saved
+			if i%100 == 0
+				push!(sub_list, state)
+				# println(get_average(state))
+			end
+
+			# at the very last state, the average spin is printed
+			if i == itir
+				# println("state average ", get_average(state))
+				push!(final, abs(get_average(state)))
+
+			end
+
 		end
 
 	end
-	# println(state)
-	println(get_average(state))
-	final.push!(sub_list)
 
 end
+
+savefig(plot(temperature, final), plotname)
+
