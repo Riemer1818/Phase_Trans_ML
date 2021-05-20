@@ -11,14 +11,18 @@ import datetime
 import matplotlib.pyplot as plt
 import pickle
 import os
+import sys
 from functions.functions import *
 
 
 if __name__ == "__main__":
+
+    dirname = sys.argv[1]
+
     dir = "./data"    
-    dirname = "normal_2D_20grid_10000itir_100step"
-    path = os.path.join(dir, dirname, "rawdata.pkl")
-    
+    path = os.path.join(dir, dirname)
+    print("using: ", path, " as training inputfile")
+
     with open(os.path.join(path , "rawdata.pkl"), "rb") as file:
         totdata = pickle.load(file)
         dims = totdata[0]
@@ -80,4 +84,4 @@ if __name__ == "__main__":
     # plt.show() 
         
     np.save(os.path.join(path, 'weights.npy'), nn.weight)
-    np.save(os.path.join(path, 'bias.npy'), nn.bais)
+    np.save(os.path.join(path, 'bias.npy'), nn.bias)
