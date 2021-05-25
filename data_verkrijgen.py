@@ -11,7 +11,6 @@ import pickle
 np.random.seed(24)
 import time
 begin = time.time()
-J = 1
 
 class StatPhys:
     """Een model voor spin."""
@@ -91,13 +90,15 @@ class StatPhys:
         "nu willen we de laatste en de 10 daarvoor met spacing 100."
         final_lijst = [[self.KbT,lijst[-1]]]
         for i in range(1,10):
-            final_lijst.append([self.KbT,lijst[-100*i]])
+            final_lijst.append([self.KbT,lijst[-steps*i]])
         return final_lijst
          
       
 Tk = 2.27
+J = 1
 n = 100 #hoeveel verschillende temp
 m = 5   #hoeveel random states per temp
+steps = 100 # hoeveel stappen tussen de laatste states van een grid
 Temperatuur = np.linspace(0.001,2*Tk, n) 
 "alle temperaturen waarvoor we data gaan verzamelen."
 
