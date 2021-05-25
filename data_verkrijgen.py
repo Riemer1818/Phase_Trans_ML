@@ -8,8 +8,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pickle
-'random seed 37 voor train data'
-'seed 24 voor test data'
 np.random.seed(24)
 import time
 begin = time.time()
@@ -58,8 +56,6 @@ class StatPhys:
             lijst[i[0]+1] = self.M
         return lijst
     
-    
-    
     def Iteratie(self, n):
         """Hier creeëren we de volgende stap."""
         i = np.random.randint(0,self.xlen)
@@ -81,7 +77,6 @@ class StatPhys:
             else:
                 DeeltjeIsGeflipt = False
         
-        
         '''De volgende energie en magnetisatie uitrekenen'''
         if DeeltjeIsGeflipt:
             self.lijst_energie[n+1] = self.lijst_energie[n] + 2*(DeltaE/self.N)
@@ -91,12 +86,12 @@ class StatPhys:
             self.lijst_magnetization[n+1] = self.lijst_magnetization[n]
         
    
-    def laatste_10waardes(self, hoeveelheid = 5*(10**3)):
+    def laatste_10waardes(self, hoeveelheid = 10**4):
         lijst = self.Lijst_maken(hoeveelheid)
         "nu willen we de laatste en de 10 daarvoor met spacing 100."
         final_lijst = [[self.KbT,lijst[-1]]]
         for i in range(1,10):
-            final_lijst.append([self.KbT,lijst[-50*i]])
+            final_lijst.append([self.KbT,lijst[-100*i]])
         return final_lijst
          
       
