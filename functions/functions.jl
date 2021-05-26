@@ -138,12 +138,7 @@ function prepare(step, m, n, Kb, J, itir, dims, dir)
 	end
 
 	# final filename
-<<<<<<< HEAD
 	filename = format * "_" * string(dims) * "D_" * string(m) * "M_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
-=======
-	filename = format * "_" * string(dims) * "D_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
->>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
-
 	text =
 	"""
 temperature steps: $step 
