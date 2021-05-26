@@ -1,7 +1,0 @@
-temperature steps: 100 
-states per temperatures:  30
-grid length: 20
-Kb: 1
-ferromagnetic normal
-itirations 1000000
-	
