@@ -9,29 +9,20 @@ function make_state(n)
 end
 """-------------------------------------------------------------------------------------"""
 
-<<<<<<< HEAD
 step 	= 100 	# number of temperatures
 m 		= 10 	# number of states per temperature #TODO:add to name
-=======
-step 	= 1000 	# number of temperatures
-m 		= 5 	# number of states per temperature
->>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
+
 n 		= 20 	# length of grid 
 
 # Kb 		= 1.380649*10^-23 #Boltzman constant
 Kb 		= 1 
 J 		= 1 #if J negative: antiferromagnet
-<<<<<<< HEAD
+
 itir 	= 10^6 # number of itirations
-dir 	= mkpath("./test_data")
+dir 	= mkpath("./train_data")
 
 Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86) 
-=======
-itir 	= 10^4 # number of itirations
-dir 	= mkpath("./test_data")
 
-Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86)
->>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
 
 """-------------------------------------------------------------------------------------"""
 
@@ -101,8 +92,5 @@ for T in temperature
 end
 
 final = [dims, n, big_list]
-<<<<<<< HEAD
+
 pickle_func(dir, filename, final)
-=======
-pickle_func(dir, filename, final)
->>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
