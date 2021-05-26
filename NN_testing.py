@@ -15,7 +15,11 @@ if __name__ == "__main__":
     dirname_train = sys.argv[1]
     dirname_test = sys.argv[2]
 
+<<<<<<< HEAD
     dir_train = "./train_data"    
+=======
+    dir_train = "./data"    
+>>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
     path_train = os.path.join(dir_train, dirname_train)
     print("using: ", path_train, " as training inputfile")
 

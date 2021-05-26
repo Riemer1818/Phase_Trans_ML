@@ -10,7 +10,12 @@ import numpy as np
 import datetime
 import matplotlib.pyplot as plt
 import pickle
+<<<<<<< HEAD
 import os, sys
+=======
+import os
+import sys
+>>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
 from functions.functions import *
 
 
@@ -18,7 +23,11 @@ if __name__ == "__main__":
 
     dirname = sys.argv[1]
 
+<<<<<<< HEAD
     dir = "./train_data"    
+=======
+    dir = "./data"    
+>>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41
     path = os.path.join(dir, dirname)
     print("using: ", path, " as training inputfile")
 
