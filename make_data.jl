@@ -9,17 +9,29 @@ function make_state(n)
 end
 """-------------------------------------------------------------------------------------"""
 
-step 	= 100 	# number of temperatures
-m 		= 10 	# number of states per temperature #TODO:add to name
 
-n 		= 20 	# length of grid 
+
+# step 	= 100 	# number of temperatures
+step 	= parse(Int64, ARGS[1])
+
+# m 		= 10 	# number of states per temperature #TODO:add to name
+m 		= parse(Int64, ARGS[2])
+
+# n 		= 20 	# length of grid 
+n 		= parse(Int64, ARGS[3])
 
 # Kb 		= 1.380649*10^-23 #Boltzman constant
 Kb 		= 1 
-J 		= 1 #if J negative: antiferromagnet
 
-itir 	= 10^4 # number of itirations
-dir 	= mkpath("./train_data")
+# J 		= 1 #if J negative: antiferromagnet
+J 		= parse(Int64, ARGS[4])
+
+#itir 	= 10^4 # number of itirations
+it		= parse(Int64, ARGS[5])
+itir 	= 10^it
+
+# dir 	= mkpath("./train_data")
+dir 	= mkpath(ARGS[6])
 
 Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86) 
 
