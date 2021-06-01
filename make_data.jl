@@ -86,8 +86,12 @@ for z in 1:m
 
 			# every 100 states a state is saved
 			if (i-1)%100 == 0
-				push!(sub, [T, state])
-				# println(get_average(state))
+				if i <= itir/10
+					continue
+				else
+					push!(sub, [T, state])
+				end
+				
 			end
 
 		end
