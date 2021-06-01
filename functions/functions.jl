@@ -116,12 +116,12 @@ function calc_flip(∆H::Int64, KbT::Float64)
 end
 
 
-function pickle_func(dir, filename, obj)
+function pickle_func(dir, filename, z, obj)
 
-	path = joinpath(dir, filename, "rawdata.pkl")
+	path = joinpath(dir, filename, "rawdata"*string(z)*".pkl")
 
 	open(path, "w") do file
-		pickle.dump(final, file)
+		pickle.dump(obj, file)
 	end
 
 	println("pickled!")
@@ -138,7 +138,7 @@ function prepare(step, m, n, Kb, J, itir, dims, dir)
 	end
 
 	# final filename
-	filename = format * "_" * string(dims) * "D_" * string(m) * "M_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
+	filename = format * "_" * string(dims) * "D_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
 	text =
 	"""
 temperature steps: $step 

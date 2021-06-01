@@ -17,19 +17,27 @@ from functions.functions import *
 if __name__ == "__main__":
 
     dirname = sys.argv[1]
-    dir = "./train_data"    
-    path = os.path.join(dir, dirname)
-    print("using: ", path, " as training inputfile")
+    print("using: ", dirname, " as training input directory")
 
-    with open(os.path.join(path , "rawdata.pkl"), "rb") as file:
-        totdata = pickle.load(file)
-        dims = totdata[0]
-        n = totdata[1]
-        dataset = totdata[2]
+    totdata = []
+
+    for filename in os.listdir(dirname):
+        if filename.endswith('.pkl'):
+            f = os.path.join(dirname, filename)
+            with open(f, "rb") as file:
+                totdata = pickle.load(file)
+                dims = totdata[0]
+                n = totdata[1]
+                dataset = totdata[2]
+
+        else:
+            pass
+
+        totdata.append(dataset)
 
     size = n^dims 
 
-    dataset = np.concatenate(dataset) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
+    dataset = np.concatenate(totdata) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
 
     number_of_training_data = 30
 
@@ -65,21 +73,6 @@ if __name__ == "__main__":
             
         nn.feedforward(normaal = 0)
         nn.backprop(10 ** nfactor)
-        
-    # plt.figure('weight_groote & learning_rate')
-    # plt.plot(weight_aanpas_groote, label ='weightgroote')  
-    # plt.plot(nfactor_lijst, label = 'learning_rate')   
-    # plt.legend()
-    # plt.show()  
-     
-    # plt.figure('fout plot')
-    # plt.plot(foutmarge_training_data, label = 'fout op trainingdata')  
-    # plt.plot(foutmarge_ongeziene_data, label = 'fout op alledata inclusie ongeziene data')
-    # plt.legend()
-    # plt.plot(np.zeros(len(foutmarge_ongeziene_data))) # 0 lijn 
-    # plt.xlabel('epochs')
-    # plt.ylabel('genormaliserede fout')
-    # plt.show() 
         
     np.save(os.path.join(path, 'weights.npy'), nn.weight)
     np.save(os.path.join(path, 'bias.npy'), nn.bias)

@@ -1,7 +1,3 @@
-<<<<<<< HEAD:functions/functions.py
-=======
-
->>>>>>> 422c5d3d4b23f12a4efb87ed1fd042a30f22de41:python_code/testen_van_getraindenetwerk.py
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
