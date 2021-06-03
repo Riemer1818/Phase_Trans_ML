@@ -53,6 +53,13 @@ filename = prepare(step, m, n, Kb, J, itir, dims, dir)
 # makes linspace of temperature
 temperature = LinRange(0, Tk*2, step) # |> collect
 
+# get's 100 values equally distributed over last 10% of itirations 
+save_steps = range(itir-((1/10)*itir)+1, stop=itir, length=100)
+floor_save_steps = []
+for s_step in save_steps
+	push!(floor_save_steps, floor(s_step))
+end
+
 
 # makes a map of all possible neighbors (vectors)
 neighbor_map = get_neighbor_map(dims, n)
@@ -85,22 +92,13 @@ for z in 1:m
 			end
 
 			# every 100 states a state is saved
-			if (i-1)%100 == 0
-				if i <= itir/10
-					continue
-				else
-					push!(sub, [T, state])
-				end
-				
+			if i in floor_save_steps
+				push!(sub, [T, state])
 			end
-
 		end
-
 	end
-	
 	final = [dims, n, sub]
 	pickle_func(dir, filename, z, final)
 
 end
-
 
