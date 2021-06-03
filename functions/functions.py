@@ -107,7 +107,7 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
 class NeuralNetwork:
     """Een neuraal Netwerk."""
 
-    def __init__(self, shape, weights, bias, data, number_of_training_data): #shape [784,16,16,10] data is de volledige input, input_size
+    def __init__(self, shape, weights, bias, data, number_of_training_data, Tk = None): #shape [784,16,16,10] data is de volledige input, input_size
         
         self.data_for_DO    = data
         self.full_data      = np.array([np.reshape(i[1],-1) for i in data])
@@ -115,6 +115,7 @@ class NeuralNetwork:
         self.shape          = shape
         self.weight         = weights
         self.bias           = bias 
+        self.Tk             = Tk 
         self.input_size     = int(self.shape[0])
         self.output_size    = int(self.shape[-1])
         self.weight_aanpas_groote = 0

@@ -72,8 +72,6 @@ function get_particle_energy(A::Array, M::Array, n::Int, random_locat::Array, J:
 
 end
 
-# define J
-
 
 function get_random_particle(dims)
 	# gets a random partile location in grid

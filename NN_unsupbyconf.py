@@ -9,6 +9,7 @@ import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 #import pandas_datareader as pdr
+from functions.functions import *
 import timeit
 np.random.seed(1)
 
@@ -24,54 +25,10 @@ def recover_graph(verhoudingen,beginwaarde):
     return new_data     
         
 
-def sigmoid(X):
-    """Sigmoid Function."""
-    return  1/(1+np.exp(-X))
-
-def diff_sigmoid(X):
-    """Afgeleiden Sigmoid Function."""
-    return (X)*(1.0-(X))
-
-
-def ReLU(x, factor = 0.15):
-    """Relu Function."""
-    y1 = ((x > 0) * x)                                            
-    return y1
-
-def ReLU_leaky(x, factor = 0.15):
-    """Relu Function."""
-    y1 = ((x > 0) * x)                                            
-    y2 = ((x <= 0) * x * factor)                                         
-    leaky_way = y1 + y2  
-    return leaky_way
-
-def diff_ReLU(x):
-    y1 = ((x > 0) * 1)                                                                                 
-    return y1
-
-def diff_ReLU_leaky(x,factor = 0.15):
-    y1 = ((x > 0) * 1)                                            
-    y2 = ((x <= 0) * factor)                                         
-    leaky_way = y1 + y2
-    return leaky_way
-
-
-def cap(lijst, maxiwaarde):
-    lijst= np.array(lijst)
-    x = lijst > maxiwaarde
-    y = lijst - lijst*x + maxiwaarde*x
-    x = lijst < -maxiwaarde
-    y = y - y*x - maxiwaarde*x
-    return y
-
-def softmax(output):
-    totaal = sum(np.e ** output)
-    return np.e ** output/totaal
-
 class NeuralNetwork:
     """Een neuraal Netwerk."""
 
-    def __init__(self, w,b, data, number_of_training_data,Tc): #shape [784,16,16,10] data is de volledige input, input_size
+    def __init__(self, w,b, data, number_of_training_data, Tks): #shape [784,16,16,10] data is de volledige input, input_size
         
         # self.beginwaardes   = [i[1] for i in data]
         self.data_for_DO    = data
@@ -294,29 +251,29 @@ dims = 2
 size = L**dims
 
 shape = [size,40,2]
-#%%
+
+
 Tk = 2.27
-Tcs = list(np.linspace(0.001,2*Tk, 25))
-#Tcs.append(2.27)
-print(Tcs)
+Tks = list(np.linspace(0.001,2*Tk, 25))
+
+
+print(Tks)
 trained_accuracies = []
 trainedcorrect_accuracies = []
 test_accuracies = []
 testcorrect_accuracies = []
 #%%
-for i in range(len(Tcs)):
+for i in range(len(Tks)):
 
-    w     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-    b     = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
+    weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
+    bias     = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
     
-    #w = ([np.load('f_beste_versie2_w.npy', allow_pickle=True)])[0]
-    #b = ([np.load('f_beste_versie2_b.npy', allow_pickle=True)])[0]
     dataset = np.load('f_train_data.npy', allow_pickle=True)
     dataset = np.concatenate(dataset) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
     
     number_of_training_data = 30
     
-    nn = NeuralNetwork(w,b,dataset, number_of_training_data,Tcs[i]) #eerste optie [200 ,50 , 30]
+    nn = NeuralNetwork(shape, weights, bias, dataset, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
     nn.Desired_Out()
     foutmarge_ongeziene_data = []
     weight_aanpas_groote = []
@@ -333,7 +290,7 @@ for i in range(len(Tcs)):
             print("k = " + str(k))
             print(nfactor)
             print('error',nn.test_ongeziene_data())
-            print("Tc = " + str(Tcs[i]) + " i = " + str(i))
+            print("Tc = " + str(Tks[i]) + " i = " + str(i))
             
         nn.feedforward(normaal = 0)
         nn.backprop(10 ** nfactor)        
@@ -361,21 +318,21 @@ for i in range(len(Tcs)):
 
 #%%
 
-plt.scatter(Tcs,trained_accuracies)
+plt.scatter(Tks,trained_accuracies)
 plt.show()
 
-plt.scatter(Tcs,trainedcorrect_accuracies)
+plt.scatter(Tks,trainedcorrect_accuracies)
 plt.show()
 
-plt.scatter(Tcs,test_accuracies)
+plt.scatter(Tks,test_accuracies)
 plt.show()
 
-plt.scatter(Tcs,testcorrect_accuracies)
+plt.scatter(Tks,testcorrect_accuracies)
 plt.show()
 
 #%%
 
-np.save('Tcs,n=25,e=10000',Tcs)
+np.save('Tks,n=25,e=10000',Tks)
 np.save('trained_accuracies,n=25,e=10000',trained_accuracies)
 np.save('trainedcorrect_accuracies,n=25,e=10000',trainedcorrect_accuracies)
 np.save('test_accuracies,n=25,e=10000',test_accuracies)
