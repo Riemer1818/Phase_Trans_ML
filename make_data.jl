@@ -51,10 +51,11 @@ filename = prepare(step, m, n, Kb, J, itir, dims, dir)
 
 
 # makes linspace of temperature
-temperature = LinRange(0, Tk*2, step) # |> collect
+temperature = LinRange(0, 2*Tk, step) # |> collect
 
 # get's 100 values equally distributed over last 50% of itirations 
-save_steps = range(itir-(itir/2), stop = itir, length=10) 
+save_steps = range(itir/2, stop = itir, length=10) 
+# save_steps = range(1, stop=itir, length=100) 
 
 floor_save_steps = []
 for s_step in save_steps
