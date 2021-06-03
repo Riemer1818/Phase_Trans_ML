@@ -115,6 +115,30 @@ function calc_flip(∆H::Int64, KbT::Float64)
 
 end
 
+# function calc_flip(∆H::Int64, KbT::Float64)
+# 	# returns bool dependent on difference in energy. 
+# 	particle_energy = 0
+
+# 	# when energy decreases, the state is switched (flipped), from just looking at neighbors
+# 	if ∆H > 0
+# 		return true
+	
+# 	else
+# 		# this is unclear in the python file
+# 		particle_energy = exp(∆H/KbT)
+
+# 		# compares to uniform random float 0 - 1, random chance for the particle to flip 
+# 		if particle_energy >= rand()
+# 			return true
+
+# 		else 
+# 			return false
+
+# 		end
+
+# 	end
+
+# end
 
 function pickle_func(dir, filename, z, obj)
 
