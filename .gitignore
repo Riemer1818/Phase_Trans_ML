@@ -1,2 +1,4 @@
 train_data/
 test_data/
+*data*/
+__pycache__
