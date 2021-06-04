@@ -126,7 +126,7 @@ function pickle_func(dir, filename, z, obj)
 end
 
 
-function prepare(step, m, n, Kb, J, itir, dims, dir)
+function prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
 	
 	# check ferromagnaticy and add to filename
 	if J < 1
@@ -136,29 +136,32 @@ function prepare(step, m, n, Kb, J, itir, dims, dir)
 	end
 
 	# final filename
-	filename = format * "_" * string(dims) * "D_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
+	dirname = format * "_" * string(dims) * "D_" * string(n) * "grid_" * string(itir) * "itir_" * string(step) * "step"
 	text =
 	"""
 temperature steps: $step 
 states per temperatures:  $m
 grid length: $n
+dimensions: $dims
 Kb: $Kb
 ferromagnetic $format
 itirations $itir
+saved as $dirname
+temperature $temperature
 	"""
 	
-	println("saving in ", filename)
+	println("saving in ", dirname)
 
 	try
-		mkdir(joinpath(dir, filename))
+		mkdir(joinpath(dir, dirname))
 	catch err
-		println("remove directory: ", joinpath(dir, filename), " to continue")
+		println("remove directory: ", joinpath(dir, dirname), " to continue")
 		exit()
 	end
 
-	open(joinpath(dir, filename, "config.txt"), "w") do file
+	open(joinpath(dir, dirname, "config.txt"), "w") do file
 		println(file, text)
 	end
 
-	return filename
+	return dirname
 end

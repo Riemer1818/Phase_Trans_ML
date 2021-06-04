@@ -41,17 +41,14 @@ Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86)
 # gets dimensions 
 dims = ndims(make_state(n))
 
-
 # dependent on dimensions 
 Tk = Tk_dict[dims]
 
-
-# creates directory
-filename = prepare(step, m, n, Kb, J, itir, dims, dir)
-
-
 # makes linspace of temperature
 temperature = LinRange(0, 2*Tk, step) # |> collect
+
+# creates directory
+filename = prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
 
 # get's 100 values equally distributed over last 50% of itirations 
 save_steps = range(itir/2, stop = itir, length=10) 
