@@ -2,7 +2,7 @@ import numpy as np
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas_datareader as pdr
+#import pandas_datareader as pdr
 import timeit
 import pickle
 import os

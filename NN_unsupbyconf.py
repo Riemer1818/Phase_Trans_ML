@@ -19,7 +19,7 @@ np.random.seed(1)
 if __name__ == "__main__":
     
     Tk = 2.27
-    epochs = 1000
+    epochs = 100
     steps = 25
 
     train_dirname = sys.argv[1]
