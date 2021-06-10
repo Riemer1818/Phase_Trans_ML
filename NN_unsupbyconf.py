@@ -11,10 +11,13 @@ import numpy as np
 #import pandas_datareader as pdr
 from functions.functions import *
 import timeit
+import sys, os
+import pickle 
+
 np.random.seed(1)
 
 
-if __name__ == "__main":
+if __name__ == "__main__":
     
     Tk = 2.27
     epochs = 10000
@@ -72,7 +75,7 @@ if __name__ == "__main":
 
     for i in range(len(Tks)):
         weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-        bias     = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
+        bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
         
         nn = NeuralNetwork(shape, weights, bias, train_totdata, number_of_training_data, Tks[i]) 
         nn.Desired_Out()
@@ -104,9 +107,6 @@ if __name__ == "__main":
         trained_w = nn.weight
         trained_b = nn.bais
         
-        dataset = np.load('f_test_data.npy', allow_pickle=True)
-        dataset = np.concatenate(dataset)
-        
         nn = NeuralNetwork(trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
         nn.Desired_Out()
         test_accuracies.append(nn.test_ongeziene_data())
@@ -117,9 +117,9 @@ if __name__ == "__main":
     plt.scatter(Tks,test_accuracies)
     plt.show()
 
-    np.save(os.path.join(test_dirname, 'Tks'),Tks)
-    np.save(os.path.join(test_dirname, 'trained_accuracies'),trained_accuracies)
-    np.save(os.path.join(test_dirname, 'test_accuracies'),test_accuracies)
+    np.save(os.path.join(test_dirname, 'Tks'), Tks)
+    np.save(os.path.join(test_dirname, 'trained_accuracies'), trained_accuracies)
+    np.save(os.path.join(test_dirname, 'test_accuracies'), test_accuracies)
 
 
 

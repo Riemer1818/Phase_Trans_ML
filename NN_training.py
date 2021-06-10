@@ -16,7 +16,8 @@ from functions.functions import *
 
 if __name__ == "__main__":
 
-    dirname = sys.argv[1]
+    # dirname = sys.argv[1]
+    dirname = 
     print("using: ", dirname, " as training input directory")
 
     totdata = []
