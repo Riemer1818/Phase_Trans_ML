@@ -20,6 +20,7 @@ if __name__ == "__main__":
     print("using: ", dirname, " as training input directory")
 
     totdata = []
+    number_of_training_data = 0 
 
     for filename in os.listdir(dirname):
         if filename.endswith('.pkl'):
@@ -29,18 +30,16 @@ if __name__ == "__main__":
                 dims = totdata[0]
                 n = totdata[1]
                 dataset = totdata[2]
+                number_of_training_data += 1
 
         else:
             pass
 
         totdata.append(dataset)
 
-    size = n^dims 
-
     dataset = np.concatenate(totdata) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
 
-    number_of_training_data = 30
-
+    size = n^dims 
     shape = [size,40,2]
 
     weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]

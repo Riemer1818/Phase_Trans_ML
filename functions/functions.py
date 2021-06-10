@@ -13,7 +13,6 @@ def recover_graph(verhoudingen,beginwaarde):
     for i in range(len(verhoudingen)-1):
         new_data[i+1] = new_data[i]* verhoudingen[i+1]    
     return new_data    
-
         
 
 def sigmoid(X):
@@ -115,7 +114,7 @@ class NeuralNetwork:
         self.shape          = shape
         self.weight         = weights
         self.bias           = bias 
-        self.Tk             = Tk 
+        self.Tk             = Tk
         self.input_size     = int(self.shape[0])
         self.output_size    = int(self.shape[-1])
         self.weight_aanpas_groote = 0
