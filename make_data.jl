@@ -14,24 +14,27 @@ end
 # step 	= 100 	# number of temperatures
 step 	= parse(Int64, ARGS[1])
 
+# number of states saved per temperature
+step2 	= parse(Int64, ARGS[2])
+
 # m 		= 10 	# number of states per temperature #TODO:add to name
-m 		= parse(Int64, ARGS[2])
+m 		= parse(Int64, ARGS[3])
 
 # n 		= 20 	# length of grid 
-n 		= parse(Int64, ARGS[3])
+n 		= parse(Int64, ARGS[4])
 
 # Kb 		= 1.380649*10^-23 #Boltzman constant
 Kb 		= 1 
 
 # J 		= 1 #if J negative: antiferromagnet
-J 		= parse(Int64, ARGS[4])
+J 		= parse(Int64, ARGS[5])
 
 #itir 	= 10^4 # number of itirations
-it		= parse(Int64, ARGS[5])
+it		= parse(Int64, ARGS[6])
 itir 	= 10^it
 
 # dir 	= mkpath("./train_data")
-dir 	= mkpath(ARGS[6])
+dir 	= mkpath(ARGS[7])
 
 Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86) 
 
@@ -51,7 +54,7 @@ temperature = LinRange(0, 2*Tk, step) # |> collect
 filename = prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
 
 # get's 100 values equally distributed over last 50% of itirations 
-save_steps = range(itir/2, stop = itir, length=10) 
+save_steps = range(itir/2, stop = itir, length=step2) 
 # save_steps = range(1, stop=itir, length=100) 
 
 floor_save_steps = []

@@ -5,6 +5,8 @@ import numpy as np
 import pandas_datareader as pdr
 import timeit
 import pickle
+import os
+import sys
 
 
 def recover_graph(verhoudingen,beginwaarde):
@@ -103,6 +105,27 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
         else:
             return 0
 
+def unpickle_dir(directory):
+    data = []
+    number_of_data = 0 
+    for filename in os.listdir(directory):
+        if filename.endswith('.pkl'):
+            f = os.path.join(directory, filename)
+            with open(f, "rb") as file:
+                totdata = pickle.load(file)
+                dims = totdata[0]
+                n = totdata[1]
+                dataset = totdata[2]
+                number_of_data += 1
+
+        else:
+            pass
+
+        data.append(dataset)
+        
+    return [dims, n, number_of_data, data]
+
+
 class NeuralNetwork:
     """Een neuraal Netwerk."""
 
@@ -190,10 +213,6 @@ class NeuralNetwork:
                 # layer = sigmoid(np.add(np.dot(invoer, i[1][0]),i[1][1]))
             self.layer.append(layer)
             invoer = layer
-   
-
-    """raar dat ik ouput gebruik ipv z """
-
 
     def backprop(self,learning_rate):
         """Backprop."""
@@ -203,8 +222,6 @@ class NeuralNetwork:
         for i in range(len(self.layer)-1):        #layer is van de feedforward
             output = self.layer[-i-1] # pak eerst output
             
-
-
             # error = pre_error * diff_sigmoid(output)  #[[cost voor 1 inputs], [ cost voor 2de inputs]]
             error = pre_error * diff_ReLU_leaky(output)
 
@@ -212,10 +229,8 @@ class NeuralNetwork:
             
             #weights
             d_weight = [[j*k[0] for j in k[1]] for k in samen_W]
-
             d_weight = (np.sum(d_weight,0)/(len(error))) * learning_rate #gemiddelde
            
-
             #biases 
             d_bias = (np.sum(error,0)/(len(error))) * learning_rate  #gemiddelde
             
@@ -278,4 +293,4 @@ class NeuralNetwork:
                y2_std.append(np.std(lijsty2))
                T.append(self.data_for_DO[i*50][0])
          return T,y1,y1_std,y2,y2_std
-               
+            

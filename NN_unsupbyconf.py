@@ -16,11 +16,10 @@ import pickle
 
 np.random.seed(1)
 
-
 if __name__ == "__main__":
     
     Tk = 2.27
-    epochs = 10000
+    epochs = 1000
     steps = 25
 
     train_dirname = sys.argv[1]
@@ -28,42 +27,11 @@ if __name__ == "__main__":
     test_dirname = sys.argv[2]
     print("using: ", test_dirname, " as test input directory")
 
-    train_totdata = []
-    number_of_training_data = 0 
-    test_totdata = []
-    number_of_testing_data = 0
+    dims, n, number_of_training_data, traindata = unpickle_dir(train_dirname)
+    train_totdata = np.concatenate(traindata)
 
-    for filename in os.listdir(train_dirname):
-        if filename.endswith('.pkl'):
-            f = os.path.join(train_dirname, filename)
-            with open(f, "rb") as file:
-                totdata = pickle.load(file)
-                dims = totdata[0]
-                n = totdata[1]
-                dataset = totdata[2]
-                number_of_training_data += 1
-
-        else:
-            pass
-
-        totdata.append(dataset)
-
-    train_totdata = np.concatenate(totdata) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
-
-    for filename in os.listdir(test_dirname):
-        if filename.endswith('.pkl'):
-            f = os.path.join(test_dirname, filename)
-            with open(f, "rb") as file:
-                totdata = pickle.load(file)
-                dataset = totdata[2]
-                number_of_testing_data += 1
-
-        else:
-            pass
-
-        totdata.append(dataset)
-
-    test_totdata = np.concatenate(totdata)
+    dims, n, number_of_training_data, testdata = unpickle_dir(test_dirname)
+    test_totdata = np.concatenate(testdata)
 
     size = n^dims 
     shape = [size,40,2]
@@ -105,7 +73,7 @@ if __name__ == "__main__":
         trained_accuracies.append(nn.test_ongeziene_data())
         
         trained_w = nn.weight
-        trained_b = nn.bais
+        trained_b = nn.bias
         
         nn = NeuralNetwork(trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
         nn.Desired_Out()

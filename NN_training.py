@@ -16,29 +16,14 @@ from functions.functions import *
 
 if __name__ == "__main__":
 
-    # dirname = sys.argv[1]
-    dirname = 
+    dirname = sys.argv[1]
+    # dirname = 
     print("using: ", dirname, " as training input directory")
 
-    totdata = []
-    number_of_training_data = 0 
+    dims, n, number_of_training_data, totdata = unpickle_dir(dirname)
 
-    for filename in os.listdir(dirname):
-        if filename.endswith('.pkl'):
-            f = os.path.join(dirname, filename)
-            with open(f, "rb") as file:
-                totdata = pickle.load(file)
-                dims = totdata[0]
-                n = totdata[1]
-                dataset = totdata[2]
-                number_of_training_data += 1
-
-        else:
-            pass
-
-        totdata.append(dataset)
-
-    dataset = np.concatenate(totdata) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
+    dataset = totdata
+    # dataset = np.concatenate(totdata) # nu hebben we een lijst van shape (5000,2) dus 5000 lijsten van de vorm [temp, grid]
 
     size = n^dims 
     shape = [size,40,2]
