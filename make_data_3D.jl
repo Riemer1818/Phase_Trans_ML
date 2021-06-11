@@ -3,7 +3,7 @@ include("functions/functions.jl")
 
 function make_state(n)
 	# change number of $n to change dimensions
-	state = rand((-1,1), (n, n)) 
+	state = rand((-1,1), (n, n, n)) 
 	return state
 end
 """-------------------------------------------------------------------------------------"""

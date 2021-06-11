@@ -116,10 +116,10 @@ end
 
 function pickle_func(dir, filename, z, obj)
 
-	path = joinpath(dir, filename, "rawdata"*string(z)*".pkl")
+	path = joinpath(dir, filename, "rawdata"*string(z)*".gz")
 
 	open(path, "w") do file
-		pickle.dump(obj, file, protocol=4)
+		pickle.dump(obj, file)
 	end
 
 	println("pickled!")
