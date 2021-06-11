@@ -109,7 +109,9 @@ def unpickle_dir(directory):
     data = []
     number_of_data = 0 
     for filename in os.listdir(directory):
+
         if filename.endswith('.pkl'):
+            
             f = os.path.join(directory, filename)
             with open(f, "rb") as file:
                 totdata = pickle.load(file)
@@ -117,11 +119,13 @@ def unpickle_dir(directory):
                 n = totdata[1]
                 dataset = totdata[2]
                 number_of_data += 1
+            
+            data.append(dataset)
 
         else:
             pass
 
-        data.append(dataset)
+        
         
     return [dims, n, number_of_data, data]
 
