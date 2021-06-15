@@ -19,12 +19,14 @@ np.random.seed(1)
 if __name__ == "__main__":
     
     Tk = 2.27
-    epochs = 100
-    steps = 25
+    epochs = 101
+    steps = 3
 
     train_dirname = sys.argv[1]
+    #train_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/train_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", train_dirname, " as training input directory")
     test_dirname = sys.argv[2]
+    #test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", test_dirname, " as test input directory")
 
     dims, n, number_of_training_data, traindata = unpickle_dir(train_dirname)
@@ -75,7 +77,7 @@ if __name__ == "__main__":
         trained_w = nn.weight
         trained_b = nn.bias
         
-        nn = NeuralNetwork(trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
+        nn = NeuralNetwork(shape, trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
         nn.Desired_Out()
         test_accuracies.append(nn.test_ongeziene_data())
 
@@ -84,6 +86,7 @@ if __name__ == "__main__":
 
     plt.scatter(Tks,test_accuracies)
     plt.show()
+
 
     np.save(os.path.join(test_dirname, 'Tks'), Tks)
     np.save(os.path.join(test_dirname, 'trained_accuracies'), trained_accuracies)
