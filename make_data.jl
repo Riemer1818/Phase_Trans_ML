@@ -6,9 +6,8 @@ function make_state(n)
 	state = rand((-1,1), (n, n)) 
 	return state
 end
+
 """-------------------------------------------------------------------------------------"""
-
-
 
 # step 	= 100 	# number of temperatures
 step 	= parse(Int64, ARGS[1])
@@ -94,13 +93,12 @@ for z in 1:m
 				state[CartesianIndex(Tuple(random_locat))] *= -1
 			end
 
-			# every 100 states a state is saved
-			if i in floor_save_steps
-				push!(sub, [T, deepcopy(state)])
-			end
 		end
+
+		sub = [T, deepcopy(state)])
+
 	end
-	final = [dims, n, sub]
+
 	pickle_func(dir, filename, z, final)
 
 end
