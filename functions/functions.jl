@@ -116,9 +116,9 @@ end
 
 function pickle_func(dir, filename, z, obj)
 
-	path = joinpath(dir, filename, "rawdata"*string(z)*".gz")
-
-	open(path, "w") do file
+	path = joinpath(dir, filename, "rawdata"*string(z)*".pkl")
+	
+	open(path, "w") do file	
 		pickle.dump(obj, file)
 	end
 
@@ -155,8 +155,7 @@ temperature $temperature
 	try
 		mkdir(joinpath(dir, dirname))
 	catch err
-		println("remove directory: ", joinpath(dir, dirname), " to continue")
-		exit()
+		println("adding in directory: ", joinpath(dir, dirname), " to continue")
 	end
 
 	open(joinpath(dir, dirname, "config.txt"), "w") do file

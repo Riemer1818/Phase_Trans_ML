@@ -10,30 +10,32 @@ end
 
 
 
-# step 	= 100 	# number of temperatures
-step 	= parse(Int64, ARGS[1])
+step 	= 100 	# number of temperatures
+# step 	= parse(Int64, ARGS[1])
 
 # number of states saved per temperature
-step2 	= parse(Int64, ARGS[2])
+step2 	= 100
+# step2 	= parse(Int64, ARGS[2])
 
-# m 		= 10 	# number of states per temperature 
-m 		= parse(Int64, ARGS[3])
+m 		= 100 	# number of states per temperature 
+# m 		= parse(Int64, ARGS[3])
 
-# n 		= 20 	# length of grid 
-n 		= parse(Int64, ARGS[4])
+n 		= 20 	# length of grid 
+# n 		= parse(Int64, ARGS[4])
 
 # Kb 		= 1.380649*10^-23 #Boltzman constant
 Kb 		= 1 
 
-# J 		= 1 #if J negative: antiferromagnet
-J 		= parse(Int64, ARGS[5])
+J 		= 1 #if J negative: antiferromagnet
+# J 		= parse(Int64, ARGS[5])
 
 # number of itirations per atom on average
-it_p_atom		= parse(Int64, ARGS[6])
+it_p_atom	= 1000
+# it_p_atom		= parse(Int64, ARGS[6])
 
 
-# dir 	= mkpath("./train_data")
-dir 	= mkpath(ARGS[7])
+dir 	= mkpath("./data_PCA")
+# dir 	= mkpath(ARGS[7])
 
 Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86) 
 
@@ -47,7 +49,7 @@ dims = ndims(make_state(n))
 Tk = Tk_dict[dims]
 
 # makes linspace of temperature
-temperature = LinRange(0, 2*Tk, step) # |> collect
+temperature = LinRange(Tk-0.5, Tk+0.5, step) # |> collect
 
 # number of itirations 
 itir = n^dims * it_p_atom
@@ -56,7 +58,7 @@ itir = n^dims * it_p_atom
 filename = prepare(step, m, n, Kb, J, it_p_atom, dims, dir, temperature)
 
 # get's 100 values equally distributed over last 50% of itirations 
-save_steps = range(itir/2, stop = itir, length=step2) 
+save_steps = range(itir*0.95, stop = itir, length=step2) 
 # save_steps = range(1, stop=itir, length=100) 
 
 floor_save_steps = []

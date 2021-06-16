@@ -16,19 +16,29 @@ import pickle
 
 np.random.seed(1)
 
-if __name__ == "__main__":
-    
-    Tk = 2.27
-    epochs = 101
-    steps = 3
+def out_dirnamer(Tk, epochs, steps, train_dirname):
+    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(20)
+    os.mkdir(output_dirname)
+    return output_dirname
 
+if __name__ == "__main__":
     train_dirname = sys.argv[1]
     #train_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/train_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", train_dirname, " as training input directory")
+
     test_dirname = sys.argv[2]
     #test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", test_dirname, " as test input directory")
 
+    #Tk = 2.27
+    Tk = 4.5
+    #Tk = 6.86
+
+    epochs = int(sys.argv[3])
+
+    steps = int(sys.argv[4])
+
+    out_dirname = out_dirnamer(Tk, epochs, steps, train_dirname)
     dims, n, number_of_training_data, traindata = unpickle_dir(train_dirname)
     train_totdata = np.concatenate(traindata)
 
@@ -82,15 +92,14 @@ if __name__ == "__main__":
         test_accuracies.append(nn.test_ongeziene_data())
 
     plt.scatter(Tks,trained_accuracies)
-    plt.show()
+    plt.savefig(os.path.join(out_dirname, 'trained_accuracies.png'))
 
     plt.scatter(Tks,test_accuracies)
-    plt.show()
+    plt.savefig(os.path.join(out_dirname, 'test_accuracies.png'))
 
-
-    np.save(os.path.join(test_dirname, 'Tks'), Tks)
-    np.save(os.path.join(test_dirname, 'trained_accuracies'), trained_accuracies)
-    np.save(os.path.join(test_dirname, 'test_accuracies'), test_accuracies)
+    np.save(os.path.join(out_dirname, 'Tks'), Tks)
+    np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
+    np.save(os.path.join(out_dirname, 'test_accuracies'), test_accuracies)
 
 
 
