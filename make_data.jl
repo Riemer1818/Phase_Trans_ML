@@ -3,7 +3,7 @@ include("functions/functions.jl")
 
 function make_state(n)
 	# change number of $n to change dimensions
-	state = rand((-1,1), (n, n)) 
+	state = rand((-1,1), (n, n, n, n)) 
 	return state
 end
 
@@ -12,27 +12,23 @@ end
 # step 	= 100 	# number of temperatures
 step 	= parse(Int64, ARGS[1])
 
-# number of states saved per temperature
-step2 	= parse(Int64, ARGS[2])
-
 # m 		= 10 	# number of states per temperature 
-m 		= parse(Int64, ARGS[3])
+m 		= parse(Int64, ARGS[2])
 
 # n 		= 20 	# length of grid 
-n 		= parse(Int64, ARGS[4])
+n 		= parse(Int64, ARGS[3])
 
 # Kb 		= 1.380649*10^-23 #Boltzman constant
 Kb 		= 1 
 
 # J 		= 1 #if J negative: antiferromagnet
-J 		= parse(Int64, ARGS[5])
+J 		= parse(Int64, ARGS[4])
 
 # number of itirations per atom on average
-it_p_atom		= parse(Int64, ARGS[6])
-
+it_p_atom		= parse(Int64, ARGS[5])
 
 # dir 	= mkpath("./train_data")
-dir 	= mkpath(ARGS[7])
+dir 	= mkpath(ARGS[6])
 
 Tk_dict = Dict(2 => 2.27, 3 => 4.5, 4 => 6.86) 
 
@@ -54,28 +50,19 @@ itir = n^dims * it_p_atom
 # creates directory
 filename = prepare(step, m, n, Kb, J, it_p_atom, dims, dir, temperature)
 
-# get's 100 values equally distributed over last 50% of itirations 
-save_steps = range(itir/2, stop = itir, length=step2) 
-# save_steps = range(1, stop=itir, length=100) 
-
-floor_save_steps = []
-for s_step in save_steps
-	push!(floor_save_steps, floor(s_step))
-end
-
 # makes a map of all possible neighbors (vectors)
 neighbor_map = get_neighbor_map(dims, n)
-
 
 # number of states per temperature
 for z in 1:m
 	
 	println(z)
 
-	sub = []
+	final = []
 
 	# iterates the temperatue
 	for T in temperature
+		sub = []
 		
 		KbT = Kb*T 		
 
@@ -95,8 +82,8 @@ for z in 1:m
 
 		end
 
-		sub = [T, deepcopy(state)])
-
+		sub = [T, deepcopy(state)]
+		push!(final, sub)		
 	end
 
 	pickle_func(dir, filename, z, final)

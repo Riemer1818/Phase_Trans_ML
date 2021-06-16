@@ -37,9 +37,14 @@ if __name__ == "__main__":
     epochs = int(sys.argv[3])
 
     steps = int(sys.argv[4])
+	
+    dims = int(sys.argv[5])
+
+    n = int(sys.argv[6])
 
     out_dirname = out_dirnamer(Tk, epochs, steps, train_dirname)
-    dims, n, number_of_training_data, traindata = unpickle_dir(train_dirname)
+    number_of_training_data, traindata = unpickle_dir(train_dirname)
+    
     train_totdata = np.concatenate(traindata)
 
     dims, n, number_of_training_data, testdata = unpickle_dir(test_dirname)
