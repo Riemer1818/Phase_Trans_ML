@@ -80,9 +80,6 @@ class NeuralNetwork:
         self.temp_train  = [i[0] for i in self.train_data]
         self.temp_test   = [i[0] for i in self.test_data]
 
-        self.train_data    = np.array([np.reshape(i[1],(self.input_size,1)) for i in self.train_data]) 
-        self.test_data     = np.array([np.reshape(i[1],(self.input_size,1)) for i in self.test_data]) 
-        
         self.weight     = weights
         self.bias       = bias
         
@@ -101,7 +98,7 @@ class NeuralNetwork:
         return DO
         # print(self.DO_all)
                 
-    def feedforward(self, aantal = 30 ,normaal= 0): 
+    def feedforward(self, aantal = 100 ,normaal= 0): 
         """Feedforward van data."""
         "normaal 0 is gwn feedforward"
         "normaal 1 test op alle trainings data"
@@ -239,97 +236,93 @@ class NeuralNetwork:
             som += np.sum(np.abs(np.abs(i[0])-np.abs(i[1])))
         return -som/len(output) #genormaliseerd
 
-###
+#%%
+   
+#train_dirname = sys.argv[1]
+train_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/train_data_ML/normal_2D_20grid_30itir_100step'
+print("using: ", train_dirname, " as training input directory")
 
+#test_dirname = sys.argv[2]
+test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_30itir_100step'
+print("using: ", test_dirname, " as test input directory")
+    
+traindata = np.load(os.path.join(train_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
+traindata = traindata[traindata[:,0].argsort()]
+#train_totdata = np.concatenate(traindata)
+
+testdata = np.load(os.path.join(test_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
+testdata = testdata[testdata[:,0].argsort()]
+#test_totdata = np.concatenate(testdata)
+
+#%%
+
+print(traindata)
+
+#%%
+
+epochs = 100
+steps = 3	
+dims = 2
+n = 20
+size = n**dims 
+
+traindata    = np.array([np.reshape(i[1],(size,1)) for i in traindata]) 
+testdata     = np.array([np.reshape(i[1],(size,1)) for i in testdata])
+
+#%%
+
+#%%
 def out_dirnamer(Tk, epochs, steps, train_dirname):
-    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(n)
+    output_dirname = 'grid'+str(n) + '_' + 'Tk' + str(Tk)+'_'+ 'epochs'+str(epochs)+'_'+'steps'+str(steps)
     os.mkdir(output_dirname)
     return output_dirname
 
-if __name__ == "__main__":
-    #train_dirname = sys.argv[1]
-    train_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/train_data_ML/normal_2D_20grid_10000itir_100step'
-    print("using: ", train_dirname, " as training input directory")
+Tk = 2.27
+#Tk = 4.5
+#Tk = 6.86
 
-    #test_dirname = sys.argv[2]
-    test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_10000itir_100step'
-    print("using: ", test_dirname, " as test input directory")
+out_dirname = out_dirnamer(Tk, epochs, steps, train_dirname)
 
-    Tk = 2.27
-    #Tk = 4.5
-    #Tk = 6.86
+shape = [size,4,2]
 
-    epochs = 100
+Tks = list(np.linspace(0.001,2*Tk, steps))
 
-    steps = 3
-	
-    dims = 2
+trained_accuracies = []
+test_accuracies = []
 
-    n = 20
-
-    out_dirname = out_dirnamer(Tk, epochs, steps, train_dirname)
+for i in range(len(Tks)):
+    weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
+    bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
     
-    traindata = np.load(os.path.join(train_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
-    #train_totdata = np.concatenate(traindata)
+    nn = NeuralNetwork(shape, weights, bias, traindata, testdata, Tks[i]) 
+    #nn.Desired_Out()
+    
+    foutmarge_traindata = []
+    weight_aanpas_groote = []
+    nfactor_lijst = []
+    
+    nfactor = -1
+    
+    for k in range(epochs):
+        if k %10 == 0:
+            print("k = " + str(k))
+            print("Tk = " + str(Tks[i]) + " i = " + str(i))
+            
+        nn.feedforward(normaal = 0)
+        nn.backprop(10 ** nfactor)        
+    
+    trained_accuracies.append(nn.testen_nn(normaal=1))
+    test_accuracies.append(nn.testen_nn(normaal=2))
 
-    testdata = np.load(os.path.join(test_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
-    #test_totdata = np.concatenate(testdata)
+plt.scatter(Tks,trained_accuracies)
+plt.savefig(os.path.join(out_dirname, 'trained_accuracies.png'))
 
-    size = n^dims 
-    shape = [size,40,2]
+plt.scatter(Tks,test_accuracies)
+plt.savefig(os.path.join(out_dirname, 'test_accuracies.png'))
 
-    Tks = list(np.linspace(0.001,2*Tk, steps))
-
-    trained_accuracies = []
-    test_accuracies = []
-
-    for i in range(len(Tks)):
-        weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-        bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
-        
-        nn = NeuralNetwork(shape, weights, bias, traindata, Tks[i]) 
-        nn.Desired_Out()
-        
-        foutmarge_ongeziene_data = []
-        weight_aanpas_groote = []
-        nfactor_lijst = []
-        
-        nfactor = -3
-        
-        for k in range(epochs):
-            if k%10 == 0:
-                foutmarge_ongezien = nn.test_ongeziene_data()
-                foutmarge_ongeziene_data.append(foutmarge_ongezien)
-                nfactor  = learning_rate_function(foutmarge_ongezien)
-                nfactor_lijst.append(nfactor)
-
-            if k %100 == 0:
-                print("k = " + str(k))
-                print(nfactor)
-                print('error',nn.test_ongeziene_data())
-                print("Tk = " + str(Tks[i]) + " i = " + str(i))
-                
-            nn.feedforward(normaal = 0)
-            nn.backprop(10 ** nfactor)        
-        
-        trained_accuracies.append(nn.test_ongeziene_data())
-        
-        trained_w = nn.weight
-        trained_b = nn.bias
-        
-        nn = NeuralNetwork(shape, trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
-        nn.Desired_Out()
-        test_accuracies.append(nn.test_ongeziene_data())
-
-    plt.scatter(Tks,trained_accuracies)
-    plt.savefig(os.path.join(out_dirname, 'trained_accuracies.png'))
-
-    plt.scatter(Tks,test_accuracies)
-    plt.savefig(os.path.join(out_dirname, 'test_accuracies.png'))
-
-    np.save(os.path.join(out_dirname, 'Tks'), Tks)
-    np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
-    np.save(os.path.join(out_dirname, 'test_accuracies'), test_accuracies)
+np.save(os.path.join(out_dirname, 'Tks'), Tks)
+np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
+np.save(os.path.join(out_dirname, 'test_accuracies'), test_accuracies)
 
 
 
