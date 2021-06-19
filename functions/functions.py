@@ -149,7 +149,7 @@ class NeuralNetwork:
     def Desired_Out(self):
         """Deze function defineerd wat de desired output word."""
         self.DO_all = []   #aantal output neuronen
-        kritische_temp = 2.4
+        kritische_temp = 2.27
         for i in self.data_for_DO:
             if i[0]< kritische_temp:
                 self.DO_all.append([1,0])
