@@ -107,8 +107,6 @@ def Jacobian_ReLU_leaky(x,factor = 0.15):
         matrix[i][i] = leaky[i]
     return matrix                                                           
             
-
-       
 def makematrix(inp,lengte):
     matrix = []
     for i in range(lengte):
@@ -116,8 +114,6 @@ def makematrix(inp,lengte):
         
     return matrix
     
-
-
 class NeuralNetwork:
     """Een neuraal Netwerk."""
 
@@ -150,7 +146,7 @@ class NeuralNetwork:
     def Desired_Out(self,data):
         """Deze function defineerd wat de desired output word."""
         DO = []   #aantal output neuronen
-        kritische_temp = 2.26
+        kritische_temp = 2.27
         for i in data:
             if i[0]< kritische_temp:
                 DO.append([[1],[0]])
