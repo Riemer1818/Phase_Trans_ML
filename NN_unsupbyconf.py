@@ -5,6 +5,8 @@ Created on Thu Apr 29 17:14:38 2021
 @author: jochem
 """
 
+# karel
+
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
