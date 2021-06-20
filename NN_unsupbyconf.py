@@ -41,11 +41,11 @@ if __name__ == "__main__":
     n = int(sys.argv[6])
 
     out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname)
-    [number_of_training_data, traindata] = unpickle_dir(train_dirname)
+    number_of_training_data, train_data = unpickle_dir(train_dirname)
     
-    train_totdata = np.concatenate(traindata)
+    train_totdata = np.concatenate(train_data)
 
-    dims, n, number_of_training_data, testdata = unpickle_dir(test_dirname)
+    number_of_test_data, testdata = unpickle_dir(test_dirname)
     test_totdata = np.concatenate(testdata)
 
     size = n^dims 
