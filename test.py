@@ -4,7 +4,6 @@ import numpy as np
 
 data = []
 number_of_data = 0 
-#directory = "C:\\Users\\karel\\Documents\\UCU\\SEM8\\Complex_Systems_Project\\Data\\test_data_ML\\normal_2D_20grid_30itir_100step"
 
 for filename in os.listdir(directory):
 
@@ -23,6 +22,3 @@ for filename in os.listdir(directory):
 data = np.array(data)
 print(data[0])
 
-#%%
-
-#np.save(os.path.join(directory,'data_normal_2D_20grid_30itir_100step'),data)
