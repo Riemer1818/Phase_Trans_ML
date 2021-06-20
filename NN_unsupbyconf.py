@@ -23,15 +23,13 @@ def out_dirnamer(Tk, epochs, steps, train_dirname):
 
 if __name__ == "__main__":
     train_dirname = sys.argv[1]
-    #train_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/train_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", train_dirname, " as training input directory")
 
     test_dirname = sys.argv[2]
-    #test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_10000itir_100step'
     print("using: ", test_dirname, " as test input directory")
 
-    #Tk = 2.27
-    Tk = 4.5
+    Tk = 2.27
+    #Tk = 4.5
     #Tk = 6.86
 
     epochs = int(sys.argv[3])
@@ -42,8 +40,8 @@ if __name__ == "__main__":
 
     n = int(sys.argv[6])
 
-    out_dirname = out_dirnamer(Tk, epochs, steps, train_dirname)
-    number_of_training_data, traindata = unpickle_dir(train_dirname)
+    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname)
+    [number_of_training_data, traindata] = unpickle_dir(train_dirname)
     
     train_totdata = np.concatenate(traindata)
 
@@ -92,7 +90,7 @@ if __name__ == "__main__":
         trained_w = nn.weight
         trained_b = nn.bias
         
-        nn = NeuralNetwork(shape, trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) #eerste optie [200 ,50 , 30]
+        nn = NeuralNetwork(shape, trained_w, trained_b, test_totdata, number_of_training_data, Tks[i]) 
         nn.Desired_Out()
         test_accuracies.append(nn.test_ongeziene_data())
 

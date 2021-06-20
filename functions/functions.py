@@ -127,7 +127,7 @@ def unpickle_dir(directory):
 
         
         
-    return [dims, n, number_of_data, data]
+    return [number_of_data, data]
 
 
 class NeuralNetwork:
