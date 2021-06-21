@@ -21,10 +21,13 @@ def out_dirnamer(Tk, epochs, steps, train_dirname):
     return output_dirname
 
 if __name__ == "__main__":
-    train_dirname = os.path.join("~/Phase_Trans_ML/train_data", sys.argv[1])
+    dirname = "~/Phase_Trans_ML/train_data"
+
+    train_dirname = sys.argv[1]
+
     print("using: ", train_dirname, " as training input directory")
 
-    test_dirname = os.path.join("~/Phase_Trans_ML/test_data", sys.argv[2])
+    test_dirname = sys.argv[2]
     print("using: ", test_dirname, " as test input directory")
 
     Tk = 2.27
@@ -43,10 +46,10 @@ if __name__ == "__main__":
     
     os.mkdir(out_dirname)
 
-    number_of_training_data, train_data = unpickle_dir(train_dirname) 
+    number_of_training_data, train_data = unpickle_dir(os.path.join(dirname, train_dirname))
     train_totdata = np.concatenate(train_data)
 
-    number_of_test_data, test_data = unpickle_dir(test_dirname)
+    number_of_test_data, test_data = unpickle_dir(os.path.join(dirname, test_dirname))
     test_totdata = np.concatenate(test_data)
 
     size = n^dims 
