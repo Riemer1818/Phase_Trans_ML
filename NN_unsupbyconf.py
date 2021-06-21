@@ -17,8 +17,8 @@ import pickle
 np.random.seed(1)
 
 def out_dirnamer(Tk, epochs, steps, train_dirname):
-    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(20)
-    os.mkdir(output_dirname)
+    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(train_dirname)
+    os.mkdir(os.path.join("~/output_unsupbyconf", output_dirname)
     return output_dirname
 
 if __name__ == "__main__":
