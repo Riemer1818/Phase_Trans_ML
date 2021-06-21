@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     Tk = Tk_dict[dims]
 
-    out_dirname = os.path.join(dirname, "output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
+    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
     os.mkdir(out_dirname)
 
