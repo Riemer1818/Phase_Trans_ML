@@ -126,7 +126,7 @@ function pickle_func(dir, filename, z, obj)
 end
 
 
-function prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
+function prepare(step, n, Kb, J, itir, dims, dir, temperature)
 	
 	# check ferromagnaticy and add to filename
 	if J < 1
@@ -140,7 +140,6 @@ function prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
 	text =
 	"""
 temperature steps: $step 
-states per temperatures:  $m
 grid length: $n
 dimensions: $dims
 Kb: $Kb

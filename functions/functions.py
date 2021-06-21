@@ -27,7 +27,6 @@ def diff_sigmoid(X):
     return (X)*(1.0-(X))
 
 
-
 def ReLU(x, factor = 0.15):
     """Relu Function."""
     y1 = ((x > 0) * x)                                            
@@ -124,10 +123,8 @@ def unpickle_dir(directory):
 
         else:
             pass
-
         
-        
-    return [number_of_data, data]
+    return number_of_data, data
 
 
 class NeuralNetwork:

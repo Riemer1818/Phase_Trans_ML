@@ -13,24 +13,23 @@ from functions.functions import *
 import timeit
 import sys, os
 import pickle 
+import copy
 
 np.random.seed(1)
 
 def out_dirnamer(Tk, epochs, steps, train_dirname):
-    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(20)
-    os.mkdir(output_dirname)
+    output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(train_dirname)
     return output_dirname
 
 if __name__ == "__main__":
+    dirname_train = "./Phase_Trans_ML/train_data"
+    dirname_test = "./Phase_Trans_ML/test_data"
+
     train_dirname = sys.argv[1]
     print("using: ", train_dirname, " as training input directory")
 
     test_dirname = sys.argv[2]
     print("using: ", test_dirname, " as test input directory")
-
-    Tk = 2.27
-    #Tk = 4.5
-    #Tk = 6.86
 
     epochs = int(sys.argv[3])
 
@@ -40,15 +39,22 @@ if __name__ == "__main__":
 
     n = int(sys.argv[6])
 
-    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname)
-    [number_of_training_data, traindata] = unpickle_dir(train_dirname)
-    
-    train_totdata = np.concatenate(traindata)
+    Tk_dict = {2:2.27, 3:4.5, 4:6.68}
 
-    dims, n, number_of_training_data, testdata = unpickle_dir(test_dirname)
-    test_totdata = np.concatenate(testdata)
+    Tk = Tk_dict[dims]
+
+    out_dirname = os.path.join(out_dirnamer(Tk, epochs, steps, train_dirname))
+    
+    os.mkdir(out_dirname)
+
+    number_of_training_data, train_data = unpickle_dir(os.path.join(dirname_train, train_dirname))
+    train_totdata = np.concatenate(train_data)
+
+    number_of_test_data, test_data = unpickle_dir(os.path.join(dirname_test, test_dirname))
+    test_totdata = np.concatenate(test_data)
 
     size = n^dims 
+    
     shape = [size,40,2]
 
     Tks = list(np.linspace(0.001,2*Tk, steps))
@@ -56,11 +62,12 @@ if __name__ == "__main__":
     trained_accuracies = []
     test_accuracies = []
 
+    weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
+    bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
+    
+
     for i in range(len(Tks)):
-        weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-        bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
-        
-        nn = NeuralNetwork(shape, weights, bias, train_totdata, number_of_training_data, Tks[i]) 
+        nn = NeuralNetwork(shape, copy.deepcopy(weights), copy.deepcopy(bias), train_totdata, number_of_training_data, Tks[i]) 
         nn.Desired_Out()
         
         foutmarge_ongeziene_data = []
@@ -103,20 +110,4 @@ if __name__ == "__main__":
     np.save(os.path.join(out_dirname, 'Tks'), Tks)
     np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
     np.save(os.path.join(out_dirname, 'test_accuracies'), test_accuracies)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
