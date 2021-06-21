@@ -18,7 +18,6 @@ np.random.seed(1)
 
 def out_dirnamer(Tk, epochs, steps, train_dirname):
     output_dirname = str(Tk)+'_'+str(epochs)+'_'+str(steps)+'_'+str(train_dirname)
-    os.mkdir(output_dirname)
     return output_dirname
 
 if __name__ == "__main__":
@@ -42,6 +41,8 @@ if __name__ == "__main__":
 
     out_dirname = os.path.join("/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
+    mkdir(output_dirname)
+
     number_of_training_data, train_data = unpickle_dir(train_dirname) 
     train_totdata = np.concatenate(train_data)
 
@@ -49,6 +50,7 @@ if __name__ == "__main__":
     test_totdata = np.concatenate(test_data)
 
     size = n^dims 
+    
     shape = [size,40,2]
 
     Tks = list(np.linspace(0.001,2*Tk, steps))
