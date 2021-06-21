@@ -105,7 +105,7 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
         else:
             return 0
 
-def unpickle_dir(directory: str) -> list:
+def unpickle_dir(directory):
     data = []
     number_of_data = 0 
     for filename in os.listdir(directory):
@@ -124,8 +124,6 @@ def unpickle_dir(directory: str) -> list:
 
         else:
             pass
-
-        
         
     return [number_of_data, data]
 
