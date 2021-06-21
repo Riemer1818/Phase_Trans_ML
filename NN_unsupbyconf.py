@@ -45,7 +45,7 @@ if __name__ == "__main__":
     
     train_totdata = np.concatenate(traindata)
 
-    dims, n, number_of_training_data, testdata = unpickle_dir(test_dirname)
+    [number_of_training_data, testdata] = unpickle_dir(test_dirname)
     test_totdata = np.concatenate(testdata)
 
     size = n^dims 

@@ -401,8 +401,6 @@ if __name__ == '__main__':
     test_dirname = sys.argv[2]
     print("using: ", test_dirname, " as test input directory")
 
-    
-
     dims = int(sys.argv[3])
 
     n = int(sys.argv[4])
@@ -414,8 +412,8 @@ if __name__ == '__main__':
     number_of_test_data, test_data = unpickle_dir(test_dirname)
 
     # 'sorteren zodata alle temp 0, temp 0.01, temp 0.02 etc achter elkaar komen, je groepeerd de temp weer'
-    # test_data = test_data[test_data[:,0].argsort()]
-    # train_data = train_data[train_data[:,0].argsort()]
+    test_data = test_data[test_data[:,0].argsort()]
+    train_data = train_data[train_data[:,0].argsort()]
 
     size = n**dims 
     # procent = 50 #procentueel hoeveel procent traindata tov test data
@@ -432,8 +430,6 @@ if __name__ == '__main__':
     nfactor = -1
 
     i = 0
-
-
     while i <= epochs:
         nn.feedforward(aantal = number_of_training_data, normaal = 0)
         nn.backprop(10 ** nfactor)
