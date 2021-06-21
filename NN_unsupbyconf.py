@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     out_dirname = os.path.join("/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
-    os.mkdir(output_dirname)
+    os.mkdir(out_dirname)
 
     number_of_training_data, train_data = unpickle_dir(train_dirname) 
     train_totdata = np.concatenate(train_data)
