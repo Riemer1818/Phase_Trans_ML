@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     n = int(sys.argv[6])
 
-    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
+    out_dirname = os.path.join("/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
     number_of_training_data, train_data = unpickle_dir(train_dirname) 
     train_totdata = np.concatenate(train_data)
