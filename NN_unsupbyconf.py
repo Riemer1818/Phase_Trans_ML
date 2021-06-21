@@ -40,13 +40,13 @@ if __name__ == "__main__":
 
     n = int(sys.argv[6])
 
-    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname)
-    number_of_training_data, train_data = unpickle_dir(train_dirname)
+    out_dirname = os.path.join("~/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
+    number_of_training_data, train_data = unpickle_dir(train_dirname) 
     train_totdata = np.concatenate(train_data)
 
-    number_of_test_data, testdata = unpickle_dir(test_dirname)
-    test_totdata = np.concatenate(testdata)
+    number_of_test_data, test_data = unpickle_dir(test_dirname)
+    test_totdata = np.concatenate(test_data)
 
     size = n^dims 
     shape = [size,40,2]
