@@ -24,7 +24,6 @@ if __name__ == "__main__":
     dirname = "~/Phase_Trans_ML/train_data"
 
     train_dirname = sys.argv[1]
-
     print("using: ", train_dirname, " as training input directory")
 
     test_dirname = sys.argv[2]
@@ -38,7 +37,7 @@ if __name__ == "__main__":
 
     n = int(sys.argv[6])
 
-    Tk_dict = [2:2.27, 3:4.5, 4:6.68]
+    Tk_dict = {2:2.27, 3:4.5, 4:6.68}
 
     Tk = Tk_dict[dims]
 
