@@ -30,10 +30,6 @@ if __name__ == "__main__":
     test_dirname = sys.argv[2]
     print("using: ", test_dirname, " as test input directory")
 
-    Tk = 2.27
-    #Tk = 4.5
-    #Tk = 6.86
-
     epochs = int(sys.argv[3])
 
     steps = int(sys.argv[4])
@@ -41,6 +37,10 @@ if __name__ == "__main__":
     dims = int(sys.argv[5])
 
     n = int(sys.argv[6])
+
+    Tk_dict = [2:2.27, 3:4.5, 4:6.68]
+
+    Tk = Tk_dict[dims]
 
     out_dirname = os.path.join("/output_unsupbyconf", out_dirnamer(Tk, epochs, steps, train_dirname))
     
