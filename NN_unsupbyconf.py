@@ -13,6 +13,7 @@ from functions.functions import *
 import timeit
 import sys, os
 import pickle 
+import copy
 
 np.random.seed(1)
 
@@ -61,11 +62,12 @@ if __name__ == "__main__":
     trained_accuracies = []
     test_accuracies = []
 
+    weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
+    bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
+    
+
     for i in range(len(Tks)):
-        weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-        bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
-        
-        nn = NeuralNetwork(shape, weights, bias, train_totdata, number_of_training_data, Tks[i]) 
+        nn = NeuralNetwork(shape, copy.deepcopy(weights), copy.deepcopy(bias), train_totdata, number_of_training_data, Tks[i]) 
         nn.Desired_Out()
         
         foutmarge_ongeziene_data = []
@@ -108,20 +110,4 @@ if __name__ == "__main__":
     np.save(os.path.join(out_dirname, 'Tks'), Tks)
     np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
     np.save(os.path.join(out_dirname, 'test_accuracies'), test_accuracies)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
