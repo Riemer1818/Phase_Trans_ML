@@ -22,10 +22,10 @@ def out_dirnamer(Tk, epochs, steps, train_dirname):
     return output_dirname
 
 if __name__ == "__main__":
-    train_dirname = sys.argv[1]
+    train_dirname = os.path.join("~/Phase_Trans_ML/train_data", sys.argv[1])
     print("using: ", train_dirname, " as training input directory")
 
-    test_dirname = sys.argv[2]
+    test_dirname = os.path.join("~/Phase_Trans_ML/test_data", sys.argv[2])
     print("using: ", test_dirname, " as test input directory")
 
     Tk = 2.27
