@@ -121,7 +121,7 @@ def makematrix(inp,lengte):
 class NeuralNetwork:
     """Een neuraal Netwerk."""
 
-    def __init__(self, shape,train_data,test_data): #shape [784,16,16,10] data is de volledige input, input_size
+    def __init__(self, shape,train_data,test_data, number_of_training_data, number_of_test_data, Tk): #shape [784,16,16,10] data is de volledige input, input_size
         
         self.shape          = shape
         
@@ -147,21 +147,23 @@ class NeuralNetwork:
         self.weight     = [np.random.uniform(-0.1,0.1,(shape[i+1],shape[i])) for i in range(len(shape)-1)]
         self.bais       = [np.random.uniform(-1,1,(shape[i+1],1)) for i in range(len(shape)-1)]
 
-    def Desired_Out(self,data):
+        self.number_of_training_data = number_of_training_data
+        self.number_of_test_data = number_of_test_data
+
+        self.kritische_temp = Tk
+
+    def Desired_Out(self, data):
         """Deze function defineerd wat de desired output word."""
         DO = []   #aantal output neuronen
-        kritische_temp = 2.27
         for i in data:
-            if i[0]< kritische_temp:
+            if i[0]< self.kritische_temp:
                 DO.append([[1],[0]])
-            elif i[0] >= kritische_temp :
+            elif i[0] >= self.kritische_temp :
                 DO.append([[0],[1]])
                 
         return DO
         # print(self.DO_all)
                 
-            
-
     def feedforward(self, aantal = 30 ,normaal= 0): 
         """Feedforward van data."""
         "normaal 0 is gwn feedforward"
@@ -326,13 +328,11 @@ class NeuralNetwork:
          y1_std = []
          y2 = []
          y2_std = []
-         'let op! dit hangt van je dataset af'
-         'je moet bij train invullen hoevel data je per temp hebt bij je train data set'
-         'bij else moet je het zelfde aangeven maar dan voor je test data'
-         if train:
-            numberT = 500
-         else:
-            numberT = 250
+
+         if train: 
+            numberT = self.number_of_training_data
+         else: 
+            numberT = self.number_of_test_data
            
          
          lengte = int(len(output)/numberT)
@@ -406,6 +406,10 @@ if __name__ == '__main__':
 
     hidden_layer = int(sys.argv[5])
 
+    Tk_dict = {2:2.27, 3:4.5, 4:6.68}
+
+    Tk = Tk_dict[dims]
+
     train_dirname = os.path.join("./train_data", dirname)
     test_dirname = os.path.join("./test_data", dirname)
 
@@ -424,7 +428,7 @@ if __name__ == '__main__':
     out_dirname = f"{dirname}_output_NN_{epochs}_{hidden_layer}"
     os.mkdir(out_dirname)  
 
-    nn = NeuralNetwork(shape, train_data, test_data) 
+    nn = NeuralNetwork(shape, train_data, test_data, number_of_training_data, number_of_test_data, Tk ) 
 
     foutmarge_training_data = []
     foutmarge_ongeziene_data = []
