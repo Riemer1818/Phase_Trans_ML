@@ -154,9 +154,9 @@ class NeuralNetwork:
         """Deze function defineerd wat de desired output word."""
         DO = []   #aantal output neuronen
         for i in data:
-            if i[0]< self.kritische_temp:
+            if i[0]< kritische_temp:
                 DO.append([[1],[0]])
-            elif i[0] >= self.kritische_temp :
+            elif i[0] >= kritische_temp:
                 DO.append([[0],[1]])
                 
         return DO
