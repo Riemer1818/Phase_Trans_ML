@@ -407,20 +407,24 @@ if __name__ == '__main__':
 
     epochs = int(sys.argv[5])
 
-    number_of_training_data, train_data = unpickle_dir(train_dirname)
+    hidden_layer = int(sys.argv[6])
 
+    number_of_training_data, train_data = unpickle_dir(train_dirname)
     number_of_test_data, test_data = unpickle_dir(test_dirname)
 
-    # 'sorteren zodata alle temp 0, temp 0.01, temp 0.02 etc achter elkaar komen, je groepeerd de temp weer'
-    test_data = test_data[test_data[:,0].argsort()]
+    train_data = np.concatenate(train_data, axis=0)
+    test_data = np.concatenate(test_data, axis=0)
+
     train_data = train_data[train_data[:,0].argsort()]
+    test_data = test_data[test_data[:,0].argsort()]
 
     size = n**dims 
-    # procent = 50 #procentueel hoeveel procent traindata tov test data
-    nn = NeuralNetwork([size,4,2],train_data,test_data) #eerste optie [200 ,50 , 30]
-    # nn.Desired_Out()
-    # nn.feedforward(normaal = 0)
-    # nn.backprop(10 ** -6)
+
+    shape = [size,hidden_layer,2]
+    out_dirname = f"{train_dirname}_output_NN_{epochs}_{hidden_layer}"
+    os.mkdir(out_dirname)  
+
+    nn = NeuralNetwork(shape, train_data, test_data) 
 
     foutmarge_training_data = []
     foutmarge_ongeziene_data = []
@@ -434,65 +438,41 @@ if __name__ == '__main__':
         nn.feedforward(aantal = number_of_training_data, normaal = 0)
         nn.backprop(10 ** nfactor)
         
-        if k%10 == 0:
-            # print(nfactor)
+        if i%10 == 0:
+            print(i)
             fouttrain = nn.testen_nn(normaal = 1)
             fouttest = nn.testen_nn(normaal = 2)  
             foutmarge_training_data.append(fouttrain)
             foutmarge_ongeziene_data.append(fouttest)
-            # nfactor  = learning_rate_function(fouttest)
-
-        if k %50 == 0 :
-            fouttrain = nn.testen_nn(normaal = 1)
-            # print('first', nn.layer[-1][0])
-            # print('final', nn.layer[-1][1])
-            # print(nn.weight)
-            
-            fouttest = nn.testen_nn(normaal = 2)
-            # print('train_fout', fouttrain)
-            # print('test_fout', fouttest)
-
-        if k% 100 == 0:
-            # print('train_fout', fouttrain)
-            # print('test_fout', fouttest)
-            plt.figure()
-            plt.title('fout plot')
-            plt.plot(foutmarge_training_data, label = 'fout op trainingdata')  
-            plt.plot(foutmarge_ongeziene_data, label = 'fout op alledata inclusie ongeziene data')
-            plt.legend()
-            plt.plot(np.zeros(len(foutmarge_ongeziene_data))) # 0 lijn 
-            plt.xlabel('epochs')
-            plt.ylabel('genormaliserede fout')
-            # plt.show()   
-            
-            "dit moet je aan zetten als je de weights en bias wil opslaan"
-            # np.save('beste_versie_w_log', nn.weight)
-            # np.save('beste_versie_b_log', nn.bais)
-
-            'dit is voor het plotten om de 100 epochs hoe het er voor staat. dit moet je maar uitzetten als je echt gaat runnen'
-            'maar is voor inzicht best fijn'
-
-            T,y1,y1_std,y2,y2_std = nn.conclusieT()
-
-            plt.figure()
-            plt.title('test')
-            plt.errorbar(T,y1,y1_std,fmt='o', label = 'test')
-            # plt.show()
-            
-            T,y1,y1_std,y2,y2_std = nn.conclusieT(train = True)
-
-            plt.figure()
-            plt.title('train')
-            plt.errorbar(T,y1,y1_std,fmt='o', label = 'train')
-
-            # plt.show()
-            # plt.errorbar(T,y2,y2_std,fmt='o')
 
         i += 1  
-       
+
+
+    T,y1,y1_std,y2,y2_std = nn.conclusieT()
+    plt.figure()
+    plt.title("test")
+    plt.errorbar(T,y1,y1_std,fmt='o', label = 'test')
+    plt.savefig(os.path.join(out_dirname, "conclusie_test.png"))
+    np.save(os.path.join(out_dirname,"conclusie_test_data.npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
+
+    T,y1,y1_std,y2,y2_std = nn.conclusieT(train = True)
+    plt.figure()
+    plt.title("train")
+    plt.errorbar(T,y1,y1_std,fmt='o', label = 'train')  
+    plt.savefig(os.path.join(out_dirname,"conclusie_train.png"))
+    np.save(os.path.join(out_dirname,"conclusie_train_data,npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
      
-    "als je defineerd hoeveel epochs je wilt doen dan kan je ook na het je klaarben opslaan"
-    'let op! dat je de namen nog even aanpast'
+    plt.figure()
+    plt.title("fout plot")
+    plt.plot(foutmarge_training_data, label = "fout op trainingdata")  
+    plt.plot(foutmarge_ongeziene_data, label = "fout op alle data inclusie ongeziene data")
+    plt.legend()
+    plt.plot(np.zeros(len(foutmarge_ongeziene_data)))
+    plt.xlabel("epochs")
+    plt.ylabel("genormaliserede fout")
+    plt.savefig(os.path.join(out_dirname,"conclusie_fout_plot.png"))
+    np.save(os.path.join(out_dirname,"foutmarge_training_data.npy"), foutmarge_training_data, allow_pickle=True)
+    np.save(os.path.join(out_dirname,"foutmarge_ongeziene_data.npy"), foutmarge_ongeziene_data, allow_pickle=True)
              
-    np.save('beste_versie_w_T1_T4', nn.weight)
-    np.save('beste_versie_b_T1_T4', nn.bais)
+    np.save(os.path.join(out_dirname,"weights.npy"), nn.weight)
+    np.save(os.path.join(out_dirname,"bias.npy"), nn.bais)
