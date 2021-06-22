@@ -147,12 +147,12 @@ class NeuralNetwork:
         self.weight     = [np.random.uniform(-0.1,0.1,(shape[i+1],shape[i])) for i in range(len(shape)-1)]
         self.bais       = [np.random.uniform(-1,1,(shape[i+1],1)) for i in range(len(shape)-1)]
 
-        self.number_of_training_data = number_of_training_data
-        self.number_of_test_data = number_of_test_data
+        self.number_of_training_data    = number_of_training_data
+        self.number_of_test_data        = number_of_test_data
 
         self.kritische_temp = Tk
 
-    def Desired_Out(self, data):
+    def Desired_Out(self, data, kritische_temp):
         """Deze function defineerd wat de desired output word."""
         DO = []   #aantal output neuronen
         for i in data:
@@ -428,7 +428,7 @@ if __name__ == '__main__':
     out_dirname = f"{dirname}_output_NN_{epochs}_{hidden_layer}"
     os.mkdir(out_dirname)  
 
-    nn = NeuralNetwork(shape, train_data, test_data, number_of_training_data, number_of_test_data, Tk ) 
+    nn = NeuralNetwork(shape, train_data, test_data, number_of_training_data, number_of_test_data, Tk) 
 
     foutmarge_training_data = []
     foutmarge_ongeziene_data = []
