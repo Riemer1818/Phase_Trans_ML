@@ -135,8 +135,8 @@ class NeuralNetwork:
         'wat in de volgende 9 regels gebeurt is vrij gevoelig qua data input.'
         'dat kan dus beteken dat hier wat aangepast moet worden als we het op de surver draaien'
         'heb het nu zo gemaakt dat het werkt voor een georderde lijst van [[temp,grid],etc]'
-        self.DO_train    = self.Desired_Out(self.train_data)
-        self.DO_test     = self.Desired_Out(self.test_data)
+        self.DO_train    = self.Desired_Out(self.train_data, Tk)
+        self.DO_test     = self.Desired_Out(self.test_data, Tk)
         
         self.temp_train  = [i[0] for i in self.train_data]
         self.temp_test   = [i[0] for i in self.test_data]
@@ -149,8 +149,6 @@ class NeuralNetwork:
 
         self.number_of_training_data    = number_of_training_data
         self.number_of_test_data        = number_of_test_data
-
-        self.kritische_temp = Tk
 
     def Desired_Out(self, data, kritische_temp):
         """Deze function defineerd wat de desired output word."""
