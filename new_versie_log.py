@@ -395,19 +395,19 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
         
 if __name__ == '__main__':
 
-    train_dirname = sys.argv[1]
-    print("using: ", train_dirname, " as training input directory")
+    dirname = sys.argv[1]
+    print("using: ", dirname, " as training input directory")
 
-    test_dirname = sys.argv[2]
-    print("using: ", test_dirname, " as test input directory")
+    dims = int(sys.argv[2])
 
-    dims = int(sys.argv[3])
+    n = int(sys.argv[3])
 
-    n = int(sys.argv[4])
+    epochs = int(sys.argv[4])
 
-    epochs = int(sys.argv[5])
+    hidden_layer = int(sys.argv[5])
 
-    hidden_layer = int(sys.argv[6])
+    train_dirname = os.path.join("./train_data", dirname)
+    test_dirname = os.path.join("./test_data", dirname)
 
     number_of_training_data, train_data = unpickle_dir(train_dirname)
     number_of_test_data, test_data = unpickle_dir(test_dirname)
@@ -421,7 +421,7 @@ if __name__ == '__main__':
     size = n**dims 
 
     shape = [size,hidden_layer,2]
-    out_dirname = f"{train_dirname}_output_NN_{epochs}_{hidden_layer}"
+    out_dirname = f"{dirname}_output_NN_{epochs}_{hidden_layer}"
     os.mkdir(out_dirname)  
 
     nn = NeuralNetwork(shape, train_data, test_data) 
