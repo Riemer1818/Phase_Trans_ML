@@ -1,36 +1,36 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 18 10:03:38 2021
-
-@author: joche
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Sat May 15 16:38:13 2021
-
-@author: joche
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 29 17:14:38 2021
-
-@author: jochem
-"""
-
 import numpy as np
-
 import datetime
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas_datareader as pdr
 import timeit
 import random
+import os, sys
+import pickle
 
 np.random.seed(5)
 
 """--------------------------------------------------------------------------------------------------------""" 
+
+
+def unpickle_dir(directory):
+    data = []
+    number_of_data = 0 
+    for filename in os.listdir(directory):
+
+        if filename.endswith('.pkl'):
+            
+            f = os.path.join(directory, filename)
+            with open(f, "rb") as file:
+                totdata = pickle.load(file)
+                number_of_data += 1
+            data.append(totdata)
+
+        else:
+            pass
+        
+    data = np.array(data)
+
+    return [number_of_data, data]
 
 def recover_graph(verhoudingen,beginwaarde):
     new_data = np.zeros(len(verhoudingen))
@@ -242,6 +242,7 @@ class NeuralNetwork:
 
 
     def backprop(self,learning_rate):
+
         """Backprop."""
 
         learning_rate = learning_rate
@@ -292,12 +293,15 @@ class NeuralNetwork:
                 self.preloss = [j[0]@j[1]@j[2] for j in combi]
    
     def random_weight_bais(self,highed):
+
         for i in enumerate(self.weight):
             self.weight[i[0]] += np.random.uniform(-highed,highed,np.shape(i[1]))
         for i in enumerate(self.bais):
                 self.bais[i[0]] += np.random.uniform(-highed,highed,np.shape(i[1]))
     
-    def testen_nn(self, normaal): #normaal = 1 of 2
+    def testen_nn(self, normaal): 
+
+        #normaal = 1 of 2
         self.feedforward(normaal = normaal)
         output = self.layer[-1][1]
         combi = zip(output,self.DO)
@@ -307,6 +311,7 @@ class NeuralNetwork:
         return -som/len(output) #genormaliseerd
     
     def conclusieT(self, train = False):
+
          """'dit  is om te testen hoe het netwerk het doet op de data'
         'als train = False dan test je het op """
          if train:
@@ -348,7 +353,8 @@ class NeuralNetwork:
                 T.append(self.temp_test[i*numberT])
          return T,y1,y1_std,y2,y2_std
             
-def learning_rate_function(X,grens = 0.1): #  kies je factor je eerste begin foutmarge, factor/2 ^ 2 is je sig
+def learning_rate_function(X,grens = 0.1): 
+    #  kies je factor je eerste begin foutmarge, factor/2 ^ 2 is je sig
     """wil proberen de eerste fout op 4sigma te zetten dat lijkt logisch omdat dat nog redelijk fout is dan dan zit
     bij de minimale fout .
     kies je sigma dus eerstfout /4"""
@@ -361,6 +367,7 @@ def learning_rate_function(X,grens = 0.1): #  kies je factor je eerste begin fou
 
 
 def potentiale(x, grens = 1.5, minimum = -10, verhouding = 50):
+
     if x < grens and x > -grens:
         return -10
     else:
@@ -386,124 +393,86 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
             return 0
     
         
+if __name__ == '__main__':
 
+    train_dirname = sys.argv[1]
+    print("using: ", train_dirname, " as training input directory")
 
-'vul hier je train en test dat in'
-train_data = np.load('data_only_first_temp_train.npy', allow_pickle=True)
-test_data = np.load('data_only_first_temp_test.npy', allow_pickle=True)
+    test_dirname = sys.argv[2]
+    print("using: ", test_dirname, " as test input directory")
 
-'sorteren zodata alle temp 0, temp 0.01, temp 0.02 etc achter elkaar komen, je groepeerd de temp weer'
-test_data = test_data[test_data[:,0].argsort()]
-train_data = train_data[train_data[:,0].argsort()]
+    dims = int(sys.argv[3])
 
-# print(np.shape(test_data))
+    n = int(sys.argv[4])
 
+    epochs = int(sys.argv[5])
 
-number_of_training_data = 100
-# procent = 50 #procentueel hoeveel procent traindata tov test data
-nn = NeuralNetwork([400,4,2],train_data,test_data) #eerste optie [200 ,50 , 30]
-# nn.Desired_Out()
-# nn.feedforward(normaal = 0)
-# nn.backprop(10 ** -6)
+    hidden_layer = int(sys.argv[6])
+
+    number_of_training_data, train_data = unpickle_dir(train_dirname)
+    number_of_test_data, test_data = unpickle_dir(test_dirname)
+
+    train_data = np.concatenate(train_data, axis=0)
+    test_data = np.concatenate(test_data, axis=0)
+
+    train_data = train_data[train_data[:,0].argsort()]
+    test_data = test_data[test_data[:,0].argsort()]
+
+    size = n**dims 
+
+    shape = [size,hidden_layer,2]
+    out_dirname = f"{train_dirname}_output_NN_{epochs}_{hidden_layer}"
+    os.mkdir(out_dirname)  
+
+    nn = NeuralNetwork(shape, train_data, test_data) 
+
+    foutmarge_training_data = []
+    foutmarge_ongeziene_data = []
+    weight_aanpas_groote = []
+    nfactor_lijst = []        
     
+    nfactor = -1
 
-
-foutmarge_training_data = []
-foutmarge_ongeziene_data = []
-weight_aanpas_groote = []
-nfactor_lijst = []
-
-    
-nfactor = -1
-
-# for k in range(1000):
-k = 0
-while True:
-    nn.feedforward(aantal = number_of_training_data,normaal = 0)
-    nn.backprop(10 ** nfactor)
-    
-    if k%10 == 0:
-        print(nfactor)
-        fouttrain = nn.testen_nn(normaal = 1)
-        fouttest = nn.testen_nn(normaal = 2)  
-        foutmarge_training_data.append(fouttrain)
-        foutmarge_ongeziene_data.append(fouttest)
-
-        'dit kan '
-        # nfactor  = learning_rate_function(fouttest)
-
-    if k %50 == 0 :
-        fouttrain = nn.testen_nn(normaal = 1)
-        print('first', nn.layer[-1][0])
-        print('final', nn.layer[-1][1])
-        print(nn.weight)
+    i = 0
+    while i <= epochs:
+        nn.feedforward(aantal = number_of_training_data, normaal = 0)
+        nn.backprop(10 ** nfactor)
         
-        fouttest = nn.testen_nn(normaal = 2)
-        print('train_fout', fouttrain)
-        print('test_fout', fouttest)
+        if i%10 == 0:
+            print(i)
+            fouttrain = nn.testen_nn(normaal = 1)
+            fouttest = nn.testen_nn(normaal = 2)  
+            foutmarge_training_data.append(fouttrain)
+            foutmarge_ongeziene_data.append(fouttest)
+
+        i += 1  
 
 
-    
-    if k% 100 == 0:
-        print('train_fout', fouttrain)
-        print('test_fout', fouttest)
-        plt.figure()
-        plt.title('fout plot')
-        plt.plot(foutmarge_training_data, label = 'fout op trainingdata')  
-        plt.plot(foutmarge_ongeziene_data, label = 'fout op alledata inclusie ongeziene data')
-        plt.legend()
-        plt.plot(np.zeros(len(foutmarge_ongeziene_data))) # 0 lijn 
-        plt.xlabel('epochs')
-        plt.ylabel('genormaliserede fout')
-        plt.show() 
-        
-        
-        "dit moet je aan zetten als je de weights en bias wil opslaan"
-        # np.save('beste_versie_w_log', nn.weight)
-        # np.save('beste_versie_b_log', nn.bais)
+    T,y1,y1_std,y2,y2_std = nn.conclusieT()
+    plt.figure()
+    plt.title("test")
+    plt.errorbar(T,y1,y1_std,fmt='o', label = 'test')
+    plt.savefig(os.path.join(out_dirname, "conclusie_test.png"))
+    np.save(os.path.join(out_dirname,"conclusie_test_data.npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
 
-        'dit is voor het plotten om de 100 epochs hoe het er voor staat. dit moet je maar uitzetten als je echt gaat runnen'
-        'maar is voor inzicht best fijn'
-        T,y1,y1_std,y2,y2_std = nn.conclusieT()
-        plt.figure()
-        plt.title('test')
-        plt.errorbar(T,y1,y1_std,fmt='o', label = 'test')
-        plt.show()
-        
-        T,y1,y1_std,y2,y2_std = nn.conclusieT(train = True)
-
-        plt.figure()
-        plt.title('train')
-        plt.errorbar(T,y1,y1_std,fmt='o', label = 'train')
-        plt.show()
-        # plt.errorbar(T,y2,y2_std,fmt='o')
-
-    k += 1  
-   
-    
-    
- 
-"als je defineerd hoeveel epochs je wilt doen dan kan je ook na het je klaarben opslaan"
-'let op! dat je de namen nog even aanpast'
-         
-np.save('beste_versie_w_T1_T4', nn.weight)
-np.save('beste_versie_b_T1_T4', nn.bais)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    T,y1,y1_std,y2,y2_std = nn.conclusieT(train = True)
+    plt.figure()
+    plt.title("train")
+    plt.errorbar(T,y1,y1_std,fmt='o', label = 'train')  
+    plt.savefig(os.path.join(out_dirname,"conclusie_train.png"))
+    np.save(os.path.join(out_dirname,"conclusie_train_data,npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
+     
+    plt.figure()
+    plt.title("fout plot")
+    plt.plot(foutmarge_training_data, label = "fout op trainingdata")  
+    plt.plot(foutmarge_ongeziene_data, label = "fout op alle data inclusie ongeziene data")
+    plt.legend()
+    plt.plot(np.zeros(len(foutmarge_ongeziene_data)))
+    plt.xlabel("epochs")
+    plt.ylabel("genormaliserede fout")
+    plt.savefig(os.path.join(out_dirname,"conclusie_fout_plot.png"))
+    np.save(os.path.join(out_dirname,"foutmarge_training_data.npy"), foutmarge_training_data, allow_pickle=True)
+    np.save(os.path.join(out_dirname,"foutmarge_ongeziene_data.npy"), foutmarge_ongeziene_data, allow_pickle=True)
+             
+    np.save(os.path.join(out_dirname,"weights.npy"), nn.weight)
+    np.save(os.path.join(out_dirname,"bias.npy"), nn.bais)
