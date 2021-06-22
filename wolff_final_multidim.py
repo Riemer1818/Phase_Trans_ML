@@ -258,7 +258,7 @@ for dim in dimensions:
     
     if save_to_mat==1:
         my_dictionary={'wolff':save_list}
-        savemat(f"D:\\csp\\final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
+        savemat(f"final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
 
 # finally, show a list of all of the dims and their computation times (in whole seconds)
 print(time_list)
