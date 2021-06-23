@@ -31,13 +31,13 @@ show_plot=0
 # spatial dimension spdim (currently not generalized to higer dims)
 # list of matrix dimensions
 spdim = 2
-dimensions=[15]
+dimensions=[60]
 
 # temperature range, number of temperatures, number of snapshots (simulations), average flips per site
 temp_min=1.9
 temp_max=2.9
-temps=1
-snapshots=5
+temps=20
+snapshots=5000
 flips_per_site=2
 
 # create neighbor list depending on spdim
@@ -234,7 +234,8 @@ for dim in dimensions:
     
     if save_to_mat==1:
         my_dictionary={'wolff':save_list}
-        savemat(f"D:\\csp\\final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
+        savemat(f"./final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
+        #savemat("./outputmatlab.mat", my_dictionary)
 
 # finally, show a list of all of the dims and their computation times (in whole seconds)
 print(time_list)

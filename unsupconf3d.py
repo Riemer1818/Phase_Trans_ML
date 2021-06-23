@@ -18,18 +18,19 @@ np.random.seed(1)
 
 def unpickle_dir_np(directory):
     data = []
-
+    n = 0
     for filename in os.listdir(directory):
 
         if filename.endswith('.pkl'):
-            if number_of_data < 100:
+            for n =< 100:
                 f = os.path.join(directory, filename)
                 with open(f, "rb") as file:
                     dataset = pickle.load(file)
                     for i in range(len(dataset)):
                         data.append(dataset[i])
-        else:
-            pass
+        n += 1 
+    else:
+        pass
 
     data = np.array(data)
 
@@ -310,14 +311,14 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
 if __name__ == "__main__":
 
     L = int(sys.argv[1]) #20
-    dims = int(sys.arv[2]) #3
-    Tk = int(sys.arv[3]) #4.5
-    steps = int(sys.arv[4]) #25
-    epochs = int(sys.arv[5]) #10000
+    dims = int(sys.argv[2]) #3
+    Tk = float(sys.argv[3]) #4.5
+    steps = int(sys.argv[4]) #25
+    epochs = int(sys.argv[5]) #10000
     input_dir = sys.argv[6]
-    output_dir = sys.arv[7]
+    output_dir = sys.argv[7]
 
-
+    os.mkdir(output_dir)
     size = L**dims
 
     shape = [size,40,2]

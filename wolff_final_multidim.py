@@ -31,11 +31,11 @@ show_plot=0
 # spatial dimension spdim (currently not generalized to higer dims)
 # list of matrix dimensions
 spdim = 3
-dimensions=[20]
+dimensions=[50]
 
 # temperature range, number of temperatures, number of snapshots (simulations), average flips per site
 temp_min=4.3
-temp_max=5.3
+temp_max=4.8
 temps=20
 snapshots=1000
 flips_per_site=2
@@ -258,7 +258,7 @@ for dim in dimensions:
     
     if save_to_mat==1:
         my_dictionary={'wolff':save_list}
-        savemat(f"final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
+        savemat(f"./train_data_PCA/final_w{dim}_temps{temps}_in{temp_min}to{temp_max}_snap{snapshots}_flips{flips_per_site}_{spdim}d_elapsed{elapsed.seconds}.mat",my_dictionary)
 
 # finally, show a list of all of the dims and their computation times (in whole seconds)
 print(time_list)

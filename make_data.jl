@@ -3,7 +3,7 @@ include("functions/functions.jl")
 
 function make_state(n)
 	# change number of $n to change dimensions
-	state = rand((-1,1), (n, n, n, n)) 
+	state = rand((-1,1), (n, n)) 
 	return state
 end
 
@@ -42,7 +42,7 @@ dims = ndims(make_state(n))
 Tk = Tk_dict[dims]
 
 # makes linspace of temperature
-temperature = LinRange(0, 2*Tk, step) # |> collect
+temperature = LinRange(2.1, 2.6, step) # |> collect
 
 # number of itirations 
 itir = n^dims * it_p_atom
