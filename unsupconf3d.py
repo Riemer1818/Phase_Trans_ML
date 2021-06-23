@@ -10,9 +10,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 #import pandas_datareader as pdr
 import timeit
+import sys, os 
+
 np.random.seed(1)
 
 """--------------------------------------------------------------------------------------------------------""" 
+
+def unpickle_dir_np(directory):
+    data = []
+
+    for filename in os.listdir(directory):
+
+        if filename.endswith('.pkl'):
+            if number_of_data < 100:
+                f = os.path.join(directory, filename)
+                with open(f, "rb") as file:
+                    dataset = pickle.load(file)
+                    for i in range(len(dataset)):
+                        data.append(dataset[i])
+        else:
+            pass
+
+    data = np.array(data)
+
+    return data
 
 def recover_graph(verhoudingen,beginwaarde):
     new_data = np.zeros(len(verhoudingen))
@@ -285,84 +306,91 @@ def history_learningrate(lijst_foutmarge, new_fout,stimulans = 0.3, lengte_gesch
             return stimulans
         else:
             return 0
+
+if __name__ == "__main__":
+
+    L = int(sys.argv[1]) #20
+    dims = int(sys.arv[2]) #3
+    Tk = int(sys.arv[3]) #4.5
+    steps = int(sys.arv[4]) #25
+    epochs = int(sys.arv[5]) #10000
+    input_dir = sys.argv[6]
+    output_dir = sys.arv[7]
+
+
+    size = L**dims
+
+    shape = [size,40,2]
+    #%%
+    Tcs = list(np.linspace(0.001,2*Tk,steps))
+    extravals = [4.3,4.4,4.6,4.7]
+    for i in extravals:  
+        Tcs.append(i)
+    trained_accuracies = []
+    test_accuracies = []
+
+    #%%
+    traindata = unpickle_dir_np(os.path.join("./train_data", input_dir))
+
+    testdata = unpickle_dir_np(os.path.join("./t_data", input_dir))
+
+    #%%
+    for i in range(len(Tcs)):
+
+        w     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
+        b     = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
         
-L = 20
-dims = 3
-Tk = 4.5
-steps = 25
-epochs = 10000
-size = L**dims
+        #w = ([np.load('f_beste_versie2_w.npy', allow_pickle=True)])[0]
+        #b = ([np.load('f_beste_versie2_b.npy', allow_pickle=True)])[0]
+        
+        number_of_training_data = 30
+        
+        nn = NeuralNetwork(w,b,traindata, number_of_training_data,Tcs[i]) #eerste optie [200 ,50 , 30]
+        nn.Desired_Out()
+        foutmarge_ongeziene_data = []
+        weight_aanpas_groote = []
+        nfactor_lijst = []
+        
+        nfactor = -3
+        for k in range(epochs):
+            if k%10 == 0:
+                foutmarge_ongezien = nn.test_ongeziene_data()
+                foutmarge_ongeziene_data.append(foutmarge_ongezien)
+                nfactor  = learning_rate_function(foutmarge_ongezien)
+                nfactor_lijst.append(nfactor)
+            # if k %100 == 0:
+            #     print("k = " + str(k))
+            #     print(nfactor)
+            #     print('error',nn.test_ongeziene_data())
+            #     print("Tc = " + str(Tcs[i]) + " i = " + str(i))
+                
+            nn.feedforward(normaal = 0)
+            nn.backprop(10 ** nfactor)        
+        
+        trained_accuracies.append(nn.test_ongeziene_data())
+        
+        trained_w = nn.weight
+        trained_b = nn.bais
+        
+        nn = NeuralNetwork(trained_w,trained_b,testdata, number_of_training_data,Tcs[i]) #eerste optie [200 ,50 , 30]
+        nn.Desired_Out()
+        test_accuracies.append(nn.test_ongeziene_data())   
 
-shape = [size,40,2]
-#%%
-Tcs = list(np.linspace(0.001,2*Tk,steps))
-extravals = [4.3,4.4,4.6,4.7]
-for i in extravals:  
-    Tcs.append(i)
-trained_accuracies = []
-test_accuracies = []
+    #%%
 
-#%%
-traindata = np.load('traindata_normal_3D_20grid_30itir_100step.npy', allow_pickle=True)
+    plt.scatter(Tcs,trained_accuracies)
+    plt.savefig(os.path.join(output_dir, "trainresults.png"))
+    # plt.show()
 
-testdata = np.load('testdata_normal_3D_20grid_30itir_100step.npy', allow_pickle=True)
-#%%
-for i in range(len(Tcs)):
+    plt.scatter(Tcs,test_accuracies)
+    plt.savefig(os.path.join(output_dir, "testresults.png"))
+    # plt.show()
 
-    w     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-    b     = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
-    
-    #w = ([np.load('f_beste_versie2_w.npy', allow_pickle=True)])[0]
-    #b = ([np.load('f_beste_versie2_b.npy', allow_pickle=True)])[0]
-    
-    number_of_training_data = 30
-    
-    nn = NeuralNetwork(w,b,traindata, number_of_training_data,Tcs[i]) #eerste optie [200 ,50 , 30]
-    nn.Desired_Out()
-    foutmarge_ongeziene_data = []
-    weight_aanpas_groote = []
-    nfactor_lijst = []
-    
-    nfactor = -3
-    for k in range(epochs):
-        if k%10 == 0:
-            foutmarge_ongezien = nn.test_ongeziene_data()
-            foutmarge_ongeziene_data.append(foutmarge_ongezien)
-            nfactor  = learning_rate_function(foutmarge_ongezien)
-            nfactor_lijst.append(nfactor)
-        if k %100 == 0:
-            print("k = " + str(k))
-            print(nfactor)
-            print('error',nn.test_ongeziene_data())
-            print("Tc = " + str(Tcs[i]) + " i = " + str(i))
-            
-        nn.feedforward(normaal = 0)
-        nn.backprop(10 ** nfactor)        
-    
-    trained_accuracies.append(nn.test_ongeziene_data())
-    
-    trained_w = nn.weight
-    trained_b = nn.bais
-    
-    nn = NeuralNetwork(trained_w,trained_b,testdata, number_of_training_data,Tcs[i]) #eerste optie [200 ,50 , 30]
-    nn.Desired_Out()
-    test_accuracies.append(nn.test_ongeziene_data())   
+    #%%
 
-#%%
-
-plt.scatter(Tcs,trained_accuracies)
-plt.savefig("trainresults.png")
-plt.show()
-
-plt.scatter(Tcs,test_accuracies)
-plt.savefig("testresults.png")
-plt.show()
-
-#%%
-
-np.save('fakeTcs,n=25,e=10000',Tcs)
-np.save('faketrained_accuracies,n=25,e=10000',trained_accuracies)
-np.save('faketest_accuracies,n=25,e=10000',test_accuracies)
+    np.save(os.path.join(output_dir, f'fakeTcs_n={steps}_e={epochs}'),Tcs)
+    np.save(os.path.join(output_dir, f'faketrained_accuracies_n={steps}_e={epochs}'),trained_accuracies)
+    np.save(os.path.join(output_dir, f'faketest_accuracies_n={steps}_e={epochs}'),test_accuracies)
 
 
 
