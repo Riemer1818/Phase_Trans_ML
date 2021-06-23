@@ -48,7 +48,7 @@ temperature = LinRange(2.1, 2.6, step) # |> collect
 itir = n^dims * it_p_atom
 
 # creates directory
-filename = prepare(step, m, n, Kb, J, it_p_atom, dims, dir, temperature)
+filename = prepare(step, n, Kb, J, it_p_atom, dims, dir, temperature)
 
 # makes a map of all possible neighbors (vectors)
 neighbor_map = get_neighbor_map(dims, n)

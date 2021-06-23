@@ -126,7 +126,7 @@ function pickle_func(dir, filename, z, obj)
 end
 
 
-function prepare(step, n, Kb, J, itir, dims, dir, temperature)
+function prepare(step, m, n, Kb, J, itir, dims, dir, temperature)
 	
 	# check ferromagnaticy and add to filename
 	if J < 1

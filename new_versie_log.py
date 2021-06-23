@@ -462,7 +462,7 @@ if __name__ == '__main__':
     plt.title("train")
     plt.errorbar(T,y1,y1_std,fmt='o', label = 'train')  
     plt.savefig(os.path.join(out_dirname,"conclusie_train.png"))
-    np.save(os.path.join(out_dirname,"conclusie_train_data,npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
+    np.save(os.path.join(out_dirname,"conclusie_train_data.npy"), [T,y1,y1_std,y2,y2_std], allow_pickle=True)
      
     plt.figure()
     plt.title("fout plot")
