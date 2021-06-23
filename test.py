@@ -4,19 +4,19 @@ import numpy as np
 
 data = []
 number_of_data = 0 
-#directory = "C:\\Users\\karel\\Documents\\UCU\\SEM8\\Complex_Systems_Project\\Data\\test_data_ML\\normal_2D_20grid_30itir_100step"
+directory = "C:\\Users\\karel\\Documents\\UCU\\SEM8\\Complex_Systems_Project\\Data\\test_data_ML\\normal_3D_20grid_30itir_100step"
 
 for filename in os.listdir(directory):
 
     if filename.endswith('.pkl'):
-        
-        f = os.path.join(directory, filename)
-        with open(f, "rb") as file:
-            dataset = pickle.load(file)
-            print(number_of_data)
-            number_of_data += 1
-            for i in range(len(dataset)):
-                data.append(dataset[i])
+        if number_of_data < 100:
+            f = os.path.join(directory, filename)
+            with open(f, "rb") as file:
+                dataset = pickle.load(file)
+                print(number_of_data)
+                number_of_data += 1
+                for i in range(len(dataset)):
+                    data.append(dataset[i])
     else:
         pass
 
@@ -25,4 +25,4 @@ print(data[0])
 
 #%%
 
-#np.save(os.path.join(directory,'data_normal_2D_20grid_30itir_100step'),data)
+np.save(os.path.join(directory,'testdata_normal_3D_20grid_30itir_100step'),data)

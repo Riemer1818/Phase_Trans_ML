@@ -15,6 +15,7 @@ import numpy as np
 import timeit
 import sys, os
 import pickle 
+import copy
 
 np.random.seed(1)
 
@@ -246,22 +247,23 @@ print("using: ", train_dirname, " as training input directory")
 test_dirname = 'C:/Users/karel/Documents/UCU/SEM8/Complex_Systems_Project/Data/test_data_ML/normal_2D_20grid_30itir_100step'
 print("using: ", test_dirname, " as test input directory")
     
-traindata = np.load(os.path.join(train_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
-traindata = traindata[traindata[:,0].argsort()]
+#traindata = np.load(os.path.join(train_dirname, 'data500_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
+traindata = np.load(os.path.join(train_dirname, 'f_train_data.npy'), allow_pickle=True)
+traindata = np.concatenate(traindata)
+
+#traindata = traindata[traindata[:,0].argsort()]
 #train_totdata = np.concatenate(traindata)
 
-testdata = np.load(os.path.join(test_dirname, 'data_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
-testdata = testdata[testdata[:,0].argsort()]
+#testdata = np.load(os.path.join(test_dirname, 'data500_normal_2D_20grid_30itir_100step.npy'), allow_pickle=True)
+testdata = np.load(os.path.join(test_dirname, 'f_test_data.npy'), allow_pickle=True)
+testdata = np.concatenate(testdata)
+#testdata = testdata[testdata[:,0].argsort()]
 #test_totdata = np.concatenate(testdata)
 
 #%%
 
-print(traindata)
-
-#%%
-
-epochs = 100
-steps = 3	
+epochs = 50
+steps = 20	
 dims = 2
 n = 20
 size = n**dims 
@@ -269,11 +271,10 @@ size = n**dims
 traindata    = np.array([np.reshape(i[1],(size,1)) for i in traindata]) 
 testdata     = np.array([np.reshape(i[1],(size,1)) for i in testdata])
 
-#%%
 
 #%%
 def out_dirnamer(Tk, epochs, steps, train_dirname):
-    output_dirname = 'grid'+str(n) + '_' + 'Tk' + str(Tk)+'_'+ 'epochs'+str(epochs)+'_'+'steps'+str(steps)
+    output_dirname = 'griddaxdsafsdsd'+str(n) + '_' + 'Tk' + str(Tk)+'_'+ 'epochs'+str(epochs)+'_'+'steps'+str(steps)
     os.mkdir(output_dirname)
     return output_dirname
 
@@ -290,11 +291,12 @@ Tks = list(np.linspace(0.001,2*Tk, steps))
 trained_accuracies = []
 test_accuracies = []
 
+i_weights     = [np.random.uniform(-0.1,0.1,(shape[i+1],shape[i])) for i in range(len(shape)-1)]
+i_bias        = [np.random.uniform(-1,1,(shape[i+1],1)) for i in range(len(shape)-1)]
+
 for i in range(len(Tks)):
-    weights     = [np.random.uniform(-0.1,0.1,(shape[i],shape[i+1])) for i in range(len(shape)-1)]
-    bias        = [np.random.uniform(-1,1,(shape[i+1])) for i in range(len(shape)-1)]
-    
-    nn = NeuralNetwork(shape, weights, bias, traindata, testdata, Tks[i]) 
+
+    nn = NeuralNetwork(shape, copy.deepcopy(i_weights), copy.deepcopy(i_bias), traindata, testdata, Tks[i]) 
     #nn.Desired_Out()
     
     foutmarge_traindata = []
@@ -316,9 +318,11 @@ for i in range(len(Tks)):
 
 plt.scatter(Tks,trained_accuracies)
 plt.savefig(os.path.join(out_dirname, 'trained_accuracies.png'))
+plt.show()
 
 plt.scatter(Tks,test_accuracies)
 plt.savefig(os.path.join(out_dirname, 'test_accuracies.png'))
+plt.show()
 
 np.save(os.path.join(out_dirname, 'Tks'), Tks)
 np.save(os.path.join(out_dirname, 'trained_accuracies'), trained_accuracies)
