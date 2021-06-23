@@ -20,15 +20,15 @@ def unpickle_dir_np(directory):
     data = []
     n = 0
     for filename in os.listdir(directory):
-
         if filename.endswith('.pkl'):
-            for n =< 100:
+            while n =< 100:
                 f = os.path.join(directory, filename)
                 with open(f, "rb") as file:
                     dataset = pickle.load(file)
                     for i in range(len(dataset)):
                         data.append(dataset[i])
         n += 1 
+
     else:
         pass
 
