@@ -4,7 +4,7 @@ Created on Thu Apr 29 17:14:38 2021
 
 @author: jochem
 """
-
+import pickle
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +21,7 @@ def unpickle_dir_np(directory):
     n = 0
     for filename in os.listdir(directory):
         if filename.endswith('.pkl'):
-            while n =< 100:
+            while n <= 100:
                 f = os.path.join(directory, filename)
                 with open(f, "rb") as file:
                     dataset = pickle.load(file)
@@ -333,7 +333,7 @@ if __name__ == "__main__":
     #%%
     traindata = unpickle_dir_np(os.path.join("./train_data", input_dir))
 
-    testdata = unpickle_dir_np(os.path.join("./t_data", input_dir))
+    testdata = unpickle_dir_np(os.path.join("./test_data", input_dir))
 
     #%%
     for i in range(len(Tcs)):
